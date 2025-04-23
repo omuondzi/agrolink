@@ -1,11 +1,11 @@
 import { Button } from "@heroui/react";
 import { H2, Paragraph } from "../../components/typography";
-const backgroundImage = "/images/hero.webp";
+const backgroundImage = "/images/hero.jpg";
 const HeroSection = () => {
   return (
     <section className="h-dvh bg-primary">
-      <section className="w-[95%] mx-auto grid grid-cols-2 gap-[1rem] ">
-        <div className="flex justify-center items-center h-dvh">
+      <section className="w-[95%] mx-auto flex flex-col-reverse  md:grid grid-cols-2 gap-[1rem] ">
+        <div className="flex justify-center items-center h-[50dvh] md:h-dvh">
           <div className="flex flex-col gap-3">
             <H2 className="text-white font-bold">
               Fresh From Kenyan Farms To Your Table
@@ -30,7 +30,7 @@ const HeroSection = () => {
             backgroundPosition: "center",
             backgroundSize: "cover",
           }}
-          className="h-[80dvh] my-auto rounded-xl"
+          className="h-[40dvh] md:h-[80dvh] my-[0.5rem] md:my-auto rounded-xl"
         ></div>
       </section>
     </section>

@@ -3,7 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import AgrolinkLogo from "../components/logo";
 import { NAV_ITEMS } from "./config";
 
 const NavItemsWrapper = () => {
@@ -88,8 +87,8 @@ const LandingNavbar = () => {
           radius="none"
         >
           <DrawerContent className="">
-            <div className="bg-primary p-5">
-              <AgrolinkLogo />
+            <div className=" text-2xl font-bold text-primary cursor-pointer">
+              Agrolink
             </div>
 
             <div className=" flex flex-col items-start gap-[3rem] p-5">

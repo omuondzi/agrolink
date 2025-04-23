@@ -44,7 +44,7 @@ const FeaturedCategories = () => {
         {FEATURED_CATEGORIES.map((category, index) => (
           <div
             key={index}
-            className="bg-primary-100 flex flex-col justify-center items-center p-[2rem] rounded-lg"
+            className="bg-primary-50 flex flex-col justify-center items-center p-[2rem] rounded-lg"
           >
             <Icon icon={category.icon} fontSize={40} />
             <Subtitle2>{category.name}</Subtitle2>

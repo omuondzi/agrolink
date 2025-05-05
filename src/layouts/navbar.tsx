@@ -37,7 +37,7 @@ const LandingNavbar = () => {
   return (
     <nav className="border-b-3 border-primary-100 py-3">
       <section className="flex flex-col lg:flex-row items-center justify-between gap-[1rem]  lg:gap-[6rem]  !w-[90%] mx-auto ">
-        <section className="flex  lg:gap-[2rem] ">
+        <section className="flex gap-[9rem] lg:gap-[2rem] ">
           <div className=" text-2xl font-bold text-primary cursor-pointer">
             Agrolink
           </div>
@@ -74,7 +74,12 @@ const LandingNavbar = () => {
             fontSize={40}
             className="text-gray-400"
           />
-          <Button radius="none" className="bg-black text-white">
+          <Button
+            radius="none"
+            className="bg-black text-white"
+            as={Link}
+            to="/auth/login"
+          >
             Sign In
           </Button>
         </section>
@@ -86,12 +91,12 @@ const LandingNavbar = () => {
           placement="left"
           radius="none"
         >
-          <DrawerContent className="">
-            <div className=" text-2xl font-bold text-primary cursor-pointer">
+          <DrawerContent className="p-[1rem]">
+            <div className=" text-2xl font-bold text-[#034d3a] cursor-pointer">
               Agrolink
             </div>
 
-            <div className=" flex flex-col items-start gap-[3rem] p-5">
+            <div className=" flex flex-col items-start gap-[1rem] p-5">
               {NAV_ITEMS.map((item, index) => (
                 <Link
                   to={item.path}
@@ -102,6 +107,14 @@ const LandingNavbar = () => {
                 </Link>
               ))}
             </div>
+            <Button
+              radius="none"
+              className="bg-black text-white"
+              as={Link}
+              to="/login"
+            >
+              Sign In
+            </Button>
           </DrawerContent>
         </Drawer>
       </section>

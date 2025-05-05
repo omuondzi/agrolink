@@ -8,18 +8,19 @@ export const NAV_ITEMS: NAV_ITEM[] = [
     path: "/",
   },
   {
-    label: "Browse",
-    path: "/browse",
+    label: "About",
+    path: "about",
+  },
+  {
+    label: "Products",
+    path: "/products",
   },
   {
     label: "Farmers",
     path: "farmers",
   },
-  {
-    label: "About",
-    path: "about",
-  },
-  { label: "Messages", path: "messages" },
+
+  // { label: "Messages", path: "messages" },
 ];
 
 export type FooterLink = {

@@ -16,7 +16,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { Input, Button } from "@heroui/react";
 import { Subtitle2 } from "../../components/typography";
 import { handleErrors } from "../../libs/handle-errors";
-
+// import { serverUrl } from "../../serverUrl"
+import { serverUrl } from "../../serverUrl";
 const LoginPageView = () => {
   const navigate = useNavigate();
 
@@ -33,18 +34,39 @@ const LoginPageView = () => {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const handleLogin = async (loginData: LoginFormData) => {
-    try {
-      // await login({ ...loginData });
-      console.log(loginData);
+ const handleLogin = async (loginData: LoginFormData) => {
+  try {
+    const response = await serverUrl.post("/user/login/", loginData);
 
-      enqueueSnackbar("Logged In Successfully!", { variant: "success" });
-      navigate("/");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error) {
-      handleErrors(error);
+    const accessToken = response?.data?.access;
+    const refreshToken = response?.data?.refresh;
+
+    if (!accessToken) {
+      throw new Error("No access token returned from server.");
     }
-  };
+
+    // Store tokens in localStorage
+    localStorage.setItem("token", accessToken);
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    }
+
+ 
+
+    enqueueSnackbar("Logged in successfully!", { variant: "success" });
+
+    // Navigate to protected route
+    // const navigate = useNavigate();
+    navigate("/farmers");
+
+  } catch (error) {
+    // console.error("Login error:", error);
+    // handleErrors(error);
+    enqueueSnackbar("Login failed. Please check your credentials.", {
+      variant: "error",
+    });
+  }
+};
 
   return (
     <FormProvider {...methods}>

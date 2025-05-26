@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Input, Button, Link } from "@heroui/react";
 import { Subtitle2 } from "../../components/typography";
 import { handleErrors } from "../../libs/handle-errors";
+import { serverUrl } from "../../serverUrl";
 
 const SignupPageView = () => {
   const navigate = useNavigate();
@@ -31,23 +32,28 @@ const SignupPageView = () => {
     setValue("name", "");
   };
 
-  const handleSignUp = async (registrationData: RegistrationFormData) => {
-    try {
-      // await register({
-      //   email: registrationData.email.trim().toLocaleLowerCase(),
-      //   name: registrationData.name,
-      //   password: registrationData.password,
-      // });
-      console.log(registrationData);
-      enqueueSnackbar("Welocme on board!", { variant: "success" });
-
-      navigate("/");
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error) {
-      handleErrors(error);
-    }
+const handleSignUp = async () => {
+  const registrationData = {
+    email: methods.getValues("email"),
+    password: methods.getValues("password"),
   };
+
+  try {
+    
+    const response = await serverUrl.post("/user/signup/", registrationData);
+
+
+
+    enqueueSnackbar("Welcome on board!", { variant: "success" });
+
+    navigate("/auth/login");
+  } catch (error) {
+    console.error("Signup error:", error);
+    handleErrors(error);
+    enqueueSnackbar("Signup failed. Please try again.", { variant: "error" });
+  }
+};
+
 
   const {
     handleSubmit,

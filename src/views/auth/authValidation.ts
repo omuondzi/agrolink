@@ -29,6 +29,7 @@ export type RegistrationFormData = yup.InferType<typeof RegistrationFormSchema>;
 export const DefaultRegistrationForm = {
   name: "",
   email: "",
+  // phoneNumber: "",
   password: "",
 } satisfies RegistrationFormData;
 

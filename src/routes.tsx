@@ -10,6 +10,7 @@ import SignUpPage from "./pages/auth/signup";
 import LoginPage from "./pages/auth/login";
 import ForgotPassworPage from "./pages/auth/forgot-password";
 import ResetPasswordPage from "./pages/auth/reset-password";
+import ProtectedRoute from "./ProtectedRoute";
 import VegetablesPage from "./views/products/vegetables";
 import FruitsPage from "./views/products/fruits";
 import GrainsPage from "./views/products/grain";
@@ -53,7 +54,11 @@ const Router = () => {
         },
         {
           path: "farmers",
-          element: <FarmersPage />,
+          element: (
+            <ProtectedRoute>
+              <FarmersPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "*",

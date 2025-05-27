@@ -18,6 +18,7 @@ import {
   PostProductSchema,
 } from "./post-product-validation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { serverUrl } from "../../serverUrl";
 
 export const animals = [
   { key: "vegetable", label: "Vegetable" },
@@ -47,7 +48,19 @@ const AddProductModal = ({
   } = methods;
 
   const handlePost = async (data: PostProductFormData) => {
+
     try {
+      // const formData = new FormData();
+      // formData.append("name", data.name);
+      // formData.append("category", data.category); 
+      // formData.append("price", data.price.toString());
+      // formData.append("description", data.description);
+      // if (data.image) {
+      //   formData.append("image", data.image);
+      // }
+      const response = await serverUrl.post('products/create', data)
+      console.log("Product posted successfully:", response.data);
+      onOpenChange(false); 
       console.log(data);
     } catch (errors) {
       handleErrors(errors);

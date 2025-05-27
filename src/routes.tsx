@@ -54,12 +54,11 @@ const Router = () => {
         },
         {
           path: "farmers",
-          element: <FarmersPage />,
-          // element: (
-          //   <ProtectedRoute>
-          //     <FarmersPage />
-          //   </ProtectedRoute>
-          // ),
+          element: (
+            <ProtectedRoute>
+              <FarmersPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "*",

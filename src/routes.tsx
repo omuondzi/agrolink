@@ -10,6 +10,10 @@ import SignUpPage from "./pages/auth/signup";
 import LoginPage from "./pages/auth/login";
 import ForgotPassworPage from "./pages/auth/forgot-password";
 import ResetPasswordPage from "./pages/auth/reset-password";
+import VegetablesPage from "./views/products/vegetables";
+import FruitsPage from "./views/products/fruits";
+import GrainsPage from "./views/products/grain";
+import DairyPage from "./views/products/dairy";
 
 const Router = () => {
   const routes = useRoutes([
@@ -28,6 +32,24 @@ const Router = () => {
         {
           path: "products",
           element: <ProductsPage />,
+          children: [
+            {
+              path: "vegetables",
+              element: <VegetablesPage />,
+            },
+            {
+              path: "fruits",
+              element: <FruitsPage />,
+            },
+            {
+              path: "grains",
+              element: <GrainsPage />,
+            },
+            {
+              path: "dairy",
+              element: <DairyPage />,
+            },
+          ],
         },
         {
           path: "farmers",

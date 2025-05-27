@@ -13,7 +13,7 @@ export const NAV_ITEMS: NAV_ITEM[] = [
   },
   {
     label: "Products",
-    path: "/products",
+    path: "/products/vegetables",
   },
   {
     label: "Farmers",

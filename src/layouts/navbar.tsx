@@ -2,7 +2,7 @@ import { Button, Drawer, DrawerContent, Input } from "@heroui/react";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NAV_ITEMS } from "./config";
 
 const NavItemsWrapper = () => {
@@ -31,11 +31,31 @@ const NavItemsWrapper = () => {
 };
 
 const LandingNavbar = () => {
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const [shouldShowSidebar, setShowSidebar] = useState<boolean>(false);
 
   const updateDrawer = () => setShowSidebar((prev) => !prev);
   return (
-    <nav className="border-b-3 border-primary-100 py-3">
+    <nav
+      className={clsx(
+        "border-b-3 border-primary-100 py-3 bg-white",
+        isFixed && "fixed top-0 z-50 w-[100%] transition-all duration-1000"
+      )}
+    >
       <section className="flex flex-col lg:flex-row items-center justify-between gap-[1rem]  lg:gap-[6rem]  !w-[90%] mx-auto ">
         <section className="flex gap-[9rem] lg:gap-[2rem] ">
           <div className=" text-2xl font-bold text-primary cursor-pointer">

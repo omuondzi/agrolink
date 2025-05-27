@@ -34,39 +34,36 @@ const LoginPageView = () => {
     formState: { errors, isSubmitting },
   } = methods;
 
- const handleLogin = async (loginData: LoginFormData) => {
-  try {
-    const response = await serverUrl.post("/user/login/", loginData);
+  const handleLogin = async (loginData: LoginFormData) => {
+    try {
+      const response = await serverUrl.post("/user/login/", loginData);
 
-    const accessToken = response?.data?.access;
-    const refreshToken = response?.data?.refresh;
+      const accessToken = response?.data?.access;
+      const refreshToken = response?.data?.refresh;
 
-    if (!accessToken) {
-      throw new Error("No access token returned from server.");
+      if (!accessToken) {
+        throw new Error("No access token returned from server.");
+      }
+
+      // Store tokens in localStorage
+      localStorage.setItem("token", accessToken);
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+
+      enqueueSnackbar("Logged in successfully!", { variant: "success" });
+
+      // Navigate to protected route
+      // const navigate = useNavigate();
+      navigate("/farmers");
+    } catch (error) {
+      console.error("Login error:", error);
+      // handleErrors(error);
+      enqueueSnackbar("Login failed. Please check your credentials.", {
+        variant: "error",
+      });
     }
-
-    // Store tokens in localStorage
-    localStorage.setItem("token", accessToken);
-    if (refreshToken) {
-      localStorage.setItem("refreshToken", refreshToken);
-    }
-
- 
-
-    enqueueSnackbar("Logged in successfully!", { variant: "success" });
-
-    // Navigate to protected route
-    // const navigate = useNavigate();
-    navigate("/farmers");
-
-  } catch (error) {
-    console.error("Login error:", error);
-    // handleErrors(error);
-    enqueueSnackbar("Login failed. Please check your credentials.", {
-      variant: "error",
-    });
-  }
-};
+  };
 
   return (
     <FormProvider {...methods}>

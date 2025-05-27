@@ -1,7 +1,13 @@
+import StatsSection from "./stats";
+import TeamSection from "./team";
+import Testimonials from "./testimonials";
+
 const AboutPageView = () => {
   return (
-    <section className="h-dvh flex justify-center items-center">
-      about page
+    <section className=" ">
+      <StatsSection />
+      <Testimonials />
+      <TeamSection />
     </section>
   );
 };

@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   RegistrationFormSchema,
   DefaultRegistrationForm,
   RegistrationFormData,
-} from "./authValidation";
+} from './authValidation';
 
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { enqueueSnackbar } from "notistack";
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { enqueueSnackbar } from 'notistack';
 
-import { useNavigate } from "react-router-dom";
-import { Input, Button, Link } from "@heroui/react";
-import { Subtitle2 } from "../../components/typography";
-import { handleErrors } from "../../libs/handle-errors";
-import { serverUrl } from "../../serverUrl";
+import { useNavigate } from 'react-router-dom';
+import { Input, Button, Link } from '@heroui/react';
+import { Subtitle2 } from '../../components/typography';
+// import { handleErrors } from '../../libs/handle-errors';
+import { serverUrl } from '../../serverUrl';
 
 const SignupPageView = () => {
   const navigate = useNavigate();
@@ -24,36 +24,35 @@ const SignupPageView = () => {
 
   const methods = useForm<RegistrationFormData>({
     resolver: yupResolver(RegistrationFormSchema),
-    mode: "all",
+    mode: 'all',
     defaultValues: DefaultRegistrationForm,
   });
 
   const clearUsernameField = () => {
-    setValue("name", "");
+    setValue('name', '');
   };
 
-const handleSignUp = async () => {
-  const registrationData = {
-    email: methods.getValues("email"),
-    password: methods.getValues("password"),
+  const handleSignUp = async () => {
+    const registrationData = {
+      name: methods.getValues('name'),
+      // phone: methods.getValues('phoneNumber'), 
+      email: methods.getValues('email'),
+      password: methods.getValues('password'),
+    };
+
+    try {
+      const response = await serverUrl.post('/user/signup/', registrationData);
+      console.log('Signup response:', response.data);
+
+      enqueueSnackbar('Welcome on board!', { variant: 'success' });
+
+      navigate('/auth/login');
+    } catch (error) {
+      console.error('Signup error:', error);
+      // handleErrors(error);
+      enqueueSnackbar('Signup failed. Please try again.', { variant: 'error' });
+    }
   };
-
-  try {
-    
-    const response = await serverUrl.post("/user/signup/", registrationData);
-
-
-
-    enqueueSnackbar("Welcome on board!", { variant: "success" });
-
-    navigate("/auth/login");
-  } catch (error) {
-    console.error("Signup error:", error);
-    handleErrors(error);
-    enqueueSnackbar("Signup failed. Please try again.", { variant: "error" });
-  }
-};
-
 
   const {
     handleSubmit,
@@ -88,6 +87,24 @@ const handleSignUp = async () => {
             )}
           />
         </div>
+        {/* <div className="mb-3">
+          <Controller
+            name="phoneNumber"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                label="Phone Number"
+                type="tel"
+                radius="full"
+                isClearable
+                onClear={clearUsernameField}
+                isInvalid={!!errors?.name}
+                errorMessage={errors?.name?.message}
+              />
+            )}
+          />
+        </div> */}
 
         <div className="mb-3">
           <Controller
@@ -115,7 +132,7 @@ const handleSignUp = async () => {
                 {...field}
                 label="Password"
                 radius="full"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 isInvalid={!!errors?.password}
                 errorMessage={errors?.password?.message}
                 endContent={
@@ -128,7 +145,7 @@ const handleSignUp = async () => {
                   >
                     <Icon
                       className="text-[#8f8f8f]"
-                      icon={showPassword ? "mdi:eye-off" : "mdi:eye"}
+                      icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'}
                       fontSize={24}
                     />
                   </Button>
@@ -155,7 +172,7 @@ const handleSignUp = async () => {
           color="primary"
           //   className="font-medium cursor-pointer no-underline text-primary"
           underline="always"
-          onClick={() => navigate("/auth/login")}
+          onClick={() => navigate('/auth/login')}
           size="sm"
           className="cursor-pointer text-[12px] md:text-base"
         >

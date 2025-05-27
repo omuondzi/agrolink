@@ -15,7 +15,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useNavigate, Link } from "react-router-dom";
 import { Input, Button } from "@heroui/react";
 import { Subtitle2 } from "../../components/typography";
-import { handleErrors } from "../../libs/handle-errors";
+// import { handleErrors } from "../../libs/handle-errors";
 // import { serverUrl } from "../../serverUrl"
 import { serverUrl } from "../../serverUrl";
 const LoginPageView = () => {
@@ -60,7 +60,7 @@ const LoginPageView = () => {
     navigate("/farmers");
 
   } catch (error) {
-    // console.error("Login error:", error);
+    console.error("Login error:", error);
     // handleErrors(error);
     enqueueSnackbar("Login failed. Please check your credentials.", {
       variant: "error",

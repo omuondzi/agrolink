@@ -10,7 +10,8 @@ import SignUpPage from './pages/auth/signup';
 import LoginPage from './pages/auth/login';
 import ForgotPassworPage from './pages/auth/forgot-password';
 import ResetPasswordPage from './pages/auth/reset-password';
-import ProtectedRoute from './protectedRoute'
+import ProtectedRoute from './ProtectedRoute';
+
 const Router = () => {
   const routes = useRoutes([
     {

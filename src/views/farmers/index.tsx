@@ -1,10 +1,10 @@
-import { Button, Image,  useDisclosure } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import AddProductModal from './product-modal';
-import { serverUrl } from '../../serverUrl';
-import { useEffect, useState } from 'react';
-import { Subtitle, Subtitle2 } from '../../components/typography';
-import { Link } from 'react-router-dom';
+import { Button, Image, useDisclosure } from "@heroui/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import AddProductModal from "./product-modal";
+import { serverUrl } from "../../serverUrl";
+import { useEffect, useState } from "react";
+import { Subtitle, Subtitle2 } from "../../components/typography";
+import { Link } from "react-router-dom";
 
 type FarmerProduct = {
   image: string;
@@ -19,13 +19,13 @@ const FarmersPageView = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
 
-   const handleFarmerProducts = async () => {
+  const handleFarmerProducts = async () => {
     try {
-      const response = await serverUrl.get('products/my-products/');
+      const response = await serverUrl.get("products/my-products/");
       setFarmerProducts(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching farmer products:', error);
+      console.error("Error fetching farmer products:", error);
     }
   };
 
@@ -34,10 +34,10 @@ const FarmersPageView = () => {
   }, []);
 
   return (
-    <section className="h-dvh">
+    <section>
       <div className="container">
         <div className="py-3">
-          {' '}
+          {" "}
           <Button
             radius="full"
             color="primary"

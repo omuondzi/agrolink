@@ -13,6 +13,7 @@ export const RegistrationFormSchema = yup
       .string()
       .required("Please Enter your email")
       .matches(/^\S+@\S+\.\S+$/, "Enter a valid email address"),
+    accountType: yup.string().required(""),
     password: yup
       .string()
       .required("Please Enter your password")
@@ -21,6 +22,10 @@ export const RegistrationFormSchema = yup
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
         "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
       ),
+    confirmPassword: yup
+      .string()
+      .required("Please confirm password.")
+      .oneOf([yup.ref("password")], "Passwords do not match."),
   })
   .required();
 
@@ -31,6 +36,8 @@ export const DefaultRegistrationForm = {
   email: "",
   // phoneNumber: "",
   password: "",
+  confirmPassword: "",
+  accountType: "",
 } satisfies RegistrationFormData;
 
 export const UpdateProfileSchema = yup

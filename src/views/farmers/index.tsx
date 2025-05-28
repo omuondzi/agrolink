@@ -27,7 +27,7 @@ const FarmersPageView = () => {
       setFarmerProducts(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching farmer products:', error);
+      console.error("Error fetching farmer products:", error);
     }
   };
 

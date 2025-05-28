@@ -53,7 +53,7 @@ const LandingNavbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     setIsAuthenticated(false);
-    window.location.href = "/auth/login";
+    window.location.href = "/";
   };
 
   useEffect(() => {

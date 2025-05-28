@@ -3,7 +3,18 @@ import { SubHeading2, Subtitle2 } from "../../components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link } from "react-router-dom";
 
+import { ReactNode, useEffect, useState } from "react";
+import { publicAxios } from "../../serverUrl";
+
+interface Farmer {
+  phone_number: string;
+  // Add other properties if needed
+}
+
 interface PRODUCT {
+  farmer: Farmer;
+  phone_number: string;
+  description: ReactNode;
   name: string;
   price: string;
   image: string;
@@ -11,50 +22,35 @@ interface PRODUCT {
   rating: string;
   tel: string;
 }
-const FEATURED_PRODUCTS: PRODUCT[] = [
-  {
-    name: "Sukuma Wiki",
-    price: "Ksh 50/bunch",
-    image: "/images/sukumawiki.jpeg",
-    location: "Fresh from Kiambu Valley Farm",
-    rating: "4.8(245)",
-    tel: "0704617099",
-  },
-  {
-    name: "Fresh Maize",
-    price: "Ksh 30/pc",
-    image: "/images/maize.jpeg",
 
-    location: "Fresh From Nakuru Fields",
-    rating: "4.7(189)",
-    tel: "",
-  },
-  {
-    name: "Sweet Potatoes",
-    price: "Ksh 200/kg",
-    image: "/images/sweet-potato.jpeg",
 
-    location: "Fresh from Nyeri Farms",
-    rating: "4.9(312)",
-    tel: "",
-  },
-  {
-    name: "Green Beans",
-    price: "Ksh 120/kg",
-    image: "/images/green-beans.jpeg",
-
-    location: "Fresh from Limuru Gardens",
-    rating: "4.6(156)",
-    tel: "",
-  },
-];
 const FeaturedProducts = () => {
+
+  useEffect(() => {
+  handleFeaturedProducts();
+}, []);
+
+const [featuredProducts, setFeaturedProducts] = useState<PRODUCT[]>([]);
+const handleFeaturedProducts = async () => {
+  try{
+    const response = await publicAxios.get("/products/featured/");
+  setFeaturedProducts(response.data);
+  console.log("Featured Products:", response.data);
+  }
+  catch(error){
+    console.error("Error fetching featured products:", error);
+  }
+
+}
+
+
+
   return (
     <section className="bg-lightbg py-[3rem]">
       <section className="w-[90%] mx-auto">
         <SubHeading2 className="text-primary">Featured Products</SubHeading2>
         <section className="grid md:grid-cols-4 gap-2 gap-y-4 py-3">
-          {FEATURED_PRODUCTS.map((product, index) => (
+          {featuredProducts.map((product, index) => (
             <div key={index} className=" bg-white rounded-lg pb-4">
               <Image
                 src={product.image}
@@ -67,7 +63,7 @@ const FeaturedProducts = () => {
                   <Subtitle2>{product.price}</Subtitle2>
                 </div>
                 <Subtitle2 className=" text-graytext">
-                  {product.location}
+                  {product.description}
                 </Subtitle2>
                 <div className="flex justify-between items-center py-4">
                   <Subtitle2 className=" flex items-center gap-1 pt-3">
@@ -82,7 +78,7 @@ const FeaturedProducts = () => {
                     size="sm"
                     className="bg-black text-white "
                     as={Link}
-                    to={`tel:${product.tel}`}
+                    to={`tel:${product.farmer.phone_number}`}
                   >
                     Buy
                   </Button>

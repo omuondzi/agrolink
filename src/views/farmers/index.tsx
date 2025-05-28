@@ -1,10 +1,11 @@
-import { Button, Image, useDisclosure } from "@heroui/react";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import AddProductModal from "./product-modal";
-import { serverUrl } from "../../serverUrl";
-import { useEffect, useState } from "react";
-import { Subtitle, Subtitle2 } from "../../components/typography";
-import { Link } from "react-router-dom";
+import { Button, Image, useDisclosure } from '@heroui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import AddProductModal from './product-modal';
+
+import { useEffect, useState } from 'react';
+import { Subtitle, Subtitle2 } from '../../components/typography';
+import { Link, useNavigate } from 'react-router-dom';
+import { authAxios } from '../../serverUrl';
 
 type FarmerProduct = {
   image: string;
@@ -18,10 +19,11 @@ type FarmerProduct = {
 const FarmersPageView = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
+  const navigate = useNavigate();
 
   const handleFarmerProducts = async () => {
     try {
-      const response = await serverUrl.get("products/my-products/");
+      const response = await authAxios.get('products/my-products/');
       setFarmerProducts(response.data);
       console.log(response.data);
     } catch (error) {
@@ -30,14 +32,22 @@ const FarmersPageView = () => {
   };
 
   useEffect(() => {
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
+    console.log(user)
+
+    if (!user || user.role !== "farmer") {
+      navigate("/");
+      return;
+    }
+
     handleFarmerProducts();
-  }, []);
+  }, [navigate]);
 
   return (
-    <section>
+    <section className="">
       <div className="container">
         <div className="py-3">
-          {" "}
           <Button
             radius="full"
             color="primary"
@@ -78,12 +88,41 @@ const FarmersPageView = () => {
                   </Subtitle2>
                   <Button
                     radius="none"
+                    isIconOnly
                     size="sm"
-                    className="bg-black text-white"
+                    className="bg-none text-green-600 border-none"
+                    variant='ghost'
                     as={Link}
                     to={`tel:${product.tel}`}
                   >
-                    Buy
+                    <Icon 
+                      icon="weui:like-filled"
+                      fontSize={20}
+                    />
+                  </Button>
+                  <Button
+                    radius="none"
+                    isIconOnly
+                    size="sm"
+                    className="bg-none text-blue-600 border-none"
+                    variant='ghost'
+                  >
+                    <Icon 
+                      icon="material-symbols:edit-outline-rounded"
+                      fontSize={20}
+                    />
+                  </Button>
+                  <Button
+                    radius="none"
+                    isIconOnly
+                    size="sm"
+                    className="bg-none text-red-600 border-none"
+                    variant='ghost'
+                  >
+                    <Icon
+                      icon="material-symbols:delete-outline"
+                      fontSize={20}
+                    />
                   </Button>
                 </div>
               </div>

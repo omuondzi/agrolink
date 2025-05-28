@@ -37,9 +37,11 @@ const SignupPageView = () => {
   const handleSignUp = async () => {
     const registrationData = {
       name: methods.getValues("name"),
-      // phone: methods.getValues('phoneNumber'),
+      role: methods.getValues("accountType"),
+      // phone
       email: methods.getValues("email"),
       password: methods.getValues("password"),
+
     };
 
     try {
@@ -63,7 +65,7 @@ const SignupPageView = () => {
     control,
   } = methods;
 
-  const [accountType, setAccountType] = useState<"Buyer" | "Farmer">("Buyer");
+  const [accountType, setAccountType] = useState<"buyer" | "farmer">("buyer");
 
   useEffect(() => {
     (() => {
@@ -77,14 +79,14 @@ const SignupPageView = () => {
       <Tabs
         selectedKey={accountType}
         onSelectionChange={(key) => {
-          const selectedKey = key as "Buyer" | "Farmer";
+          const selectedKey = key as "buyer" | "farmer";
           setAccountType(selectedKey);
         }}
         color="primary"
         className="my-2 "
       >
-        <Tab title="Buyer" key="Buyer" />
-        <Tab title="Farmer" key="Farmer" />
+        <Tab title="buyer" key="buyer" />
+        <Tab title="farmer" key="farmer" />
       </Tabs>
       <FormProvider {...methods}>
         <form

@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Subtitle, Subtitle2 } from '../../components/typography';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAxios } from '../../serverUrl';
+import DeleteProductModal from './delete-product-modal';
+import EditProductModal from './edit-product';
 
 type FarmerProduct = {
   image: string;
@@ -17,7 +19,9 @@ type FarmerProduct = {
 };
 
 const FarmersPageView = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen:isAddOpen, onOpen:onAddOpen, onOpenChange:onAddOpenChange } = useDisclosure();
+  const { isOpen:isDeleteOpen, onOpen:onDeleteOpen, onOpenChange:onDeleteOpenChange } = useDisclosure();
+  const { isOpen:isEditOpen, onOpen:onEditOpen, onOpenChange:onEditOpenChange } = useDisclosure();
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
   const navigate = useNavigate();
 
@@ -27,17 +31,17 @@ const FarmersPageView = () => {
       setFarmerProducts(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error("Error fetching farmer products:", error);
+      console.error('Error fetching farmer products:', error);
     }
   };
 
   useEffect(() => {
-    const userJson = localStorage.getItem("user");
+    const userJson = localStorage.getItem('user');
     const user = userJson ? JSON.parse(userJson) : null;
-    console.log(user)
+    console.log(user);
 
-    if (!user || user.role !== "farmer") {
-      navigate("/");
+    if (!user || user.role !== 'farmer') {
+      navigate('/');
       return;
     }
 
@@ -52,15 +56,22 @@ const FarmersPageView = () => {
             radius="full"
             color="primary"
             endContent={<Icon icon="ic:baseline-plus" fontSize={20} />}
-            onPress={onOpen}
+            onPress={onAddOpen}
           >
             Add Product
           </Button>
           <AddProductModal
             title="Post Your Produce"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            isOpen={isAddOpen}
+            onOpenChange={onAddOpenChange}
           />
+
+          <DeleteProductModal
+            title="Delete product"
+            isOpen={isDeleteOpen}
+            onOpenChange={onDeleteOpenChange}
+          />
+          <EditProductModal title='Edit product details' isOpen={isEditOpen} onOpenChange={onEditOpenChange}/>
         </div>
         <section className="grid md:grid-cols-3 gap-2 gap-y-4 py-3">
           {farmerProducts.map((product, index) => (
@@ -91,23 +102,21 @@ const FarmersPageView = () => {
                     isIconOnly
                     size="sm"
                     className="bg-none text-green-600 border-none"
-                    variant='ghost'
+                    variant="ghost"
                     as={Link}
                     to={`tel:${product.tel}`}
                   >
-                    <Icon 
-                      icon="weui:like-filled"
-                      fontSize={20}
-                    />
+                    <Icon icon="weui:like-filled" fontSize={20} />
                   </Button>
                   <Button
                     radius="none"
                     isIconOnly
                     size="sm"
                     className="bg-none text-blue-600 border-none"
-                    variant='ghost'
+                    variant="ghost"
+                    onPress={onEditOpen}
                   >
-                    <Icon 
+                    <Icon
                       icon="material-symbols:edit-outline-rounded"
                       fontSize={20}
                     />
@@ -117,7 +126,8 @@ const FarmersPageView = () => {
                     isIconOnly
                     size="sm"
                     className="bg-none text-red-600 border-none"
-                    variant='ghost'
+                    variant="ghost"
+                     onPress={onDeleteOpen}
                   >
                     <Icon
                       icon="material-symbols:delete-outline"

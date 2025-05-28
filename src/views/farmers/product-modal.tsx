@@ -8,24 +8,23 @@ import {
   Select,
   SelectItem,
   Textarea,
-} from "@heroui/react";
+} from '@heroui/react';
 
-import { Controller, useForm } from "react-hook-form";
-import { handleErrors } from "../../libs/handle-errors";
+import { Controller, useForm } from 'react-hook-form';
+import { handleErrors } from '../../libs/handle-errors';
 import {
   DefaultPostProductData,
   PostProductFormData,
   PostProductSchema,
-} from "./post-product-validation";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { authAxios } from "../../serverUrl";
+} from './post-product-validation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { authAxios } from '../../serverUrl';
 
-
-export const animals = [
-  { key: "vegetable", label: "Vegetable" },
-  { key: "fruit", label: "Fruit" },
-  { key: "dairy", label: "Dairy" },
-  { key: "grain", label: "Grain" },
+const categories = [
+  { key: 'vegetable', label: 'Vegetable' },
+  { key: 'fruit', label: 'Fruit' },
+  { key: 'dairy', label: 'Dairy' },
+  { key: 'grain', label: 'Grain' },
 ];
 
 interface ProductModalProps {
@@ -49,19 +48,18 @@ const AddProductModal = ({
   } = methods;
 
   const handlePost = async (data: PostProductFormData) => {
-
     try {
       // const formData = new FormData();
       // formData.append("name", data.name);
-      // formData.append("category", data.category); 
+      // formData.append("category", data.category);
       // formData.append("price", data.price.toString());
       // formData.append("description", data.description);
       // if (data.image) {
       //   formData.append("image", data.image);
       // }
-      const response = await authAxios.post('products/create', data)
-      console.log("Product posted successfully:", response.data);
-      onOpenChange(false); 
+      const response = await authAxios.post('products/create/', data);
+      console.log('Product posted successfully:', response.data);
+      onOpenChange(false);
       console.log(data);
     } catch (errors) {
       handleErrors(errors);
@@ -72,7 +70,7 @@ const AddProductModal = ({
     <section>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="lg">
         <ModalContent>
-          {" "}
+          {' '}
           <ModalHeader>{title}</ModalHeader>
           <ModalBody>
             <form
@@ -87,7 +85,7 @@ const AddProductModal = ({
                     <Input
                       {...field}
                       label="Enter Product Name"
-                      type="email"
+                      type="text"
                       radius="full"
                       isInvalid={!!errors?.name}
                       errorMessage={errors?.name?.message}
@@ -109,8 +107,10 @@ const AddProductModal = ({
                       isInvalid={!!errors.category}
                       errorMessage={!!errors.category?.message}
                     >
-                      {animals.map((animal) => (
-                        <SelectItem key={animal.key}>{animal.label}</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category.key}>
+                          {category.label}
+                        </SelectItem>
                       ))}
                     </Select>
                   )}
@@ -125,7 +125,7 @@ const AddProductModal = ({
                       {...field}
                       label="Enter Product Price"
                       type="number"
-                      value={field.value?.toString() || ""}
+                      value={field.value?.toString() || ''}
                       onChange={(event) => field.onChange(event.target.value)}
                       placeholder="2,500.00"
                       radius="full"
@@ -171,7 +171,7 @@ const AddProductModal = ({
                           field.onChange(file);
                         }}
                       />
-                      {field.value && typeof field.value === "object" && (
+                      {field.value && typeof field.value === 'object' && (
                         <img
                           src={URL.createObjectURL(field.value)}
                           alt="Preview"

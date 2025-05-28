@@ -38,7 +38,7 @@ const SignupPageView = () => {
     const registrationData = {
       name: methods.getValues("name"),
       role: methods.getValues("accountType"),
-      // phone
+      phone_number: methods.getValues("phone"),
       email: methods.getValues("email"),
       password: methods.getValues("password"),
 

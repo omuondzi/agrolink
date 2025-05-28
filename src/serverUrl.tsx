@@ -1,16 +1,22 @@
+// src/api/axios.js or wherever your Axios config is
 import axios from "axios";
 
 export const baseUrl = "http://127.0.0.1:8000/api";
 
-export const serverUrl = axios.create({
+// 🔐 Authenticated instance
+export const authAxios = axios.create({
   baseURL: baseUrl,
 });
 
-// Add token to all requests if available
-serverUrl.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // make sure token is stored here
+authAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+});
+
+// 🌐 Public instance (no token)
+export const publicAxios = axios.create({
+  baseURL: baseUrl,
 });

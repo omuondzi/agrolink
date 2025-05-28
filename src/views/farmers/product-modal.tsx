@@ -18,7 +18,8 @@ import {
   PostProductSchema,
 } from "./post-product-validation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { serverUrl } from "../../serverUrl";
+import { authAxios } from "../../serverUrl";
+
 
 export const animals = [
   { key: "vegetable", label: "Vegetable" },
@@ -58,7 +59,7 @@ const AddProductModal = ({
       // if (data.image) {
       //   formData.append("image", data.image);
       // }
-      const response = await serverUrl.post('products/create', data)
+      const response = await authAxios.post('products/create', data)
       console.log("Product posted successfully:", response.data);
       onOpenChange(false); 
       console.log(data);

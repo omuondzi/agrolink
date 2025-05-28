@@ -4,8 +4,9 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Divider } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { serverUrl } from '../../serverUrl';
+
 import { useProducts } from './context/ProductsContext';
+import { publicAxios } from '../../serverUrl';
 const SIDEBAR_ITEMS = [
   {
     label: 'Vegetables',
@@ -36,7 +37,7 @@ const ProductsPageView = () => {
 const { setProducts } = useProducts();
   const handleProducts = async () => {
     try {
-      const response = await serverUrl.get('/products/all-products/');
+      const response = await publicAxios.get('/products/all-products/');
       setProducts(response.data);
       console.log(response.data);
     } catch (error) {

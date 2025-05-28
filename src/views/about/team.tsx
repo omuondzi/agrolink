@@ -15,7 +15,7 @@ const TeamSection = () => {
           {[
             {
               name: "Eric Kamau",
-              bio: "Tema lead.",
+              bio: "Team lead.",
               image: "/images/dp2.png",
             },
             {

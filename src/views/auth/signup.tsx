@@ -13,8 +13,9 @@ import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button, Link } from '@heroui/react';
 import { Subtitle2 } from '../../components/typography';
+import { authAxios } from '../../serverUrl';
 // import { handleErrors } from '../../libs/handle-errors';
-import { serverUrl } from '../../serverUrl';
+
 
 const SignupPageView = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const SignupPageView = () => {
     };
 
     try {
-      const response = await serverUrl.post('/user/signup/', registrationData);
+      const response = await authAxios.post('/user/signup/', registrationData);
       console.log('Signup response:', response.data);
 
       enqueueSnackbar('Welcome on board!', { variant: 'success' });

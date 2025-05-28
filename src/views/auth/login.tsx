@@ -15,9 +15,10 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useNavigate, Link } from "react-router-dom";
 import { Input, Button } from "@heroui/react";
 import { Subtitle2 } from "../../components/typography";
-// import { handleErrors } from "../../libs/handle-errors";
-// import { serverUrl } from "../../serverUrl"
-import { serverUrl } from "../../serverUrl";
+import { authAxios } from "../../serverUrl";
+// import { toast } from 'react-toastify';
+
+
 const LoginPageView = () => {
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ const LoginPageView = () => {
     resolver: yupResolver(LoginFormSchema),
     defaultValues: DefaultLoginForm,
   });
-
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const updateShowPasswordState = () => setShowPassword((prev) => !prev);
   const {
@@ -34,36 +35,66 @@ const LoginPageView = () => {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const handleLogin = async (loginData: LoginFormData) => {
-    try {
-      const response = await serverUrl.post("/user/login/", loginData);
 
-      const accessToken = response?.data?.access;
-      const refreshToken = response?.data?.refresh;
-
-      if (!accessToken) {
-        throw new Error("No access token returned from server.");
-      }
-
-      // Store tokens in localStorage
-      localStorage.setItem("token", accessToken);
-      if (refreshToken) {
-        localStorage.setItem("refreshToken", refreshToken);
-      }
-
-      enqueueSnackbar("Logged in successfully!", { variant: "success" });
-
-      // Navigate to protected route
-      // const navigate = useNavigate();
-      navigate("/farmers");
-    } catch (error) {
-      console.error("Login error:", error);
-      // handleErrors(error);
-      enqueueSnackbar("Login failed. Please check your credentials.", {
-        variant: "error",
-      });
-    }
+    const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    setIsAuthenticated(false);
+    window.location.href = "/";
   };
+
+
+ const handleLogin = async (loginData: LoginFormData) => {
+  try {
+    const response = await authAxios.post("/user/login/", loginData);
+
+    const accessToken = response?.data?.access;
+    const refreshToken = response?.data?.refresh;
+
+    if (!accessToken) {
+      throw new Error("No access token returned from server.");
+    }
+
+    // Store tokens
+    localStorage.setItem("token", accessToken);
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
+    }
+
+    // Fetch user profile to get role
+    const userResponse = await authAxios.get("/user/profile/", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    localStorage.setItem("user", JSON.stringify(userResponse.data));
+
+    // enqueueSnackbar("only Farmers are allowed in this page", { variant: "success" });
+
+    // Redirect based on role (optional)
+    const role = userResponse.data.role;
+    if (role === "farmer") {
+      navigate("/farmers");
+    } else if (role === "buyer") {
+      navigate("/"); 
+      handleLogout(); // Logout if not a farmer
+    } else {
+      navigate("/");
+      handleLogout();
+      // toast.error("You are not allowed to access this page.");
+      enqueueSnackbar("only Farmers are allowed in this page.", {
+      variant: "error",
+    })
+  
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    enqueueSnackbar("Login failed. Please check your credentials.", {
+      variant: "error",
+    });
+  }
+};
 
   return (
     <FormProvider {...methods}>

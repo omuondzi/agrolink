@@ -13,6 +13,7 @@ export const RegistrationFormSchema = yup
       .string()
       .required("Please Enter your email")
       .matches(/^\S+@\S+\.\S+$/, "Enter a valid email address"),
+    phone: yup.string().required("Please Enter your phone number"),
     accountType: yup.string().required(""),
     password: yup
       .string()
@@ -34,7 +35,7 @@ export type RegistrationFormData = yup.InferType<typeof RegistrationFormSchema>;
 export const DefaultRegistrationForm = {
   name: "",
   email: "",
-  // phoneNumber: "",
+  phone: "",
   password: "",
   confirmPassword: "",
   accountType: "",

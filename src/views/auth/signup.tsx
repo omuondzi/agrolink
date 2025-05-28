@@ -109,7 +109,6 @@ const SignupPageView = () => {
               )}
             />
           </div>
-
           <div className="mb-3">
             <Controller
               name="email"
@@ -125,7 +124,23 @@ const SignupPageView = () => {
                 />
               )}
             />
-          </div>
+          </div>{" "}
+          <div className="mb-3">
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Phone"
+                  type="phone"
+                  radius="full"
+                  isInvalid={!!errors?.phone}
+                  errorMessage={errors?.phone?.message}
+                />
+              )}
+            />
+          </div>{" "}
           <div className="mb-3">
             <Controller
               name="accountType"
@@ -145,7 +160,6 @@ const SignupPageView = () => {
               )}
             />
           </div>
-
           <div className="mb-3">
             <Controller
               name="password"
@@ -208,7 +222,6 @@ const SignupPageView = () => {
               )}
             />
           </div>
-
           <Button
             color="primary"
             className=" my-4 text-white"

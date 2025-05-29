@@ -8,12 +8,11 @@ import { useEffect, useState } from "react";
 import { Subtitle, Subtitle2 } from "../../components/typography";
 import { useNavigate } from "react-router-dom";
 import { authAxios, publicAxios } from "../../serverUrl";
-import DeleteProductModal from "./delete-product-modal";
-import EditProductModal from "./edit-product";
+
 import { enqueueSnackbar } from "notistack";
 import { handleErrors } from "../../libs/handle-errors";
 
-type FarmerProduct = {
+export type FarmerProduct = {
   id: number;
   image: string;
   name: string;
@@ -24,21 +23,6 @@ type FarmerProduct = {
 };
 
 const FarmersPageView = () => {
-  const {
-    isOpen: isAddOpen,
-    onOpen: onAddOpen,
-    onOpenChange: onAddOpenChange,
-  } = useDisclosure();
-  const {
-    isOpen: isDeleteOpen,
-    onOpen: onDeleteOpen,
-    onOpenChange: onDeleteOpenChange,
-  } = useDisclosure();
-  const {
-    isOpen: isEditOpen,
-    onOpen: onEditOpen,
-    onOpenChange: onEditOpenChange,
-  } = useDisclosure();
   const {
     isOpen: isAddOpen,
     onOpen: onAddOpen,

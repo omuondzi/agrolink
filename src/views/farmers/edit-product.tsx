@@ -7,18 +7,19 @@ import {
   ModalHeader,
   Input,
   Textarea,
-} from '@heroui/react';
+} from "@heroui/react";
 
-import { useEffect, useState } from 'react';
-import { handleErrors } from '../../libs/handle-errors';
-import { authAxios } from '../../serverUrl';
+import { useEffect, useState } from "react";
+import { handleErrors } from "../../libs/handle-errors";
+import { authAxios } from "../../serverUrl";
+import { FarmerProduct } from ".";
 
 interface ProductModalProps {
   isOpen: boolean;
   title: string;
   productId: number;
   onOpenChange: (isOpen: boolean) => void;
-  onEditSuccess: (updatedProduct: ProductData & { id: number }) => void;
+  onEditSuccess: (updatedProduct: FarmerProduct) => void;
 }
 
 interface ProductData {
@@ -39,12 +40,12 @@ const EditProductModal = ({
 }: ProductModalProps) => {
   const [product, setProduct] = useState<ProductData | null>(null);
   const [formData, setFormData] = useState<ProductData>({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     price: 0,
-    category: '',
+    category: "",
     stock: 0,
-    image: '',
+    image: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +60,7 @@ const EditProductModal = ({
         price: response.data.price,
         category: response.data.category,
         stock: response.data.stock,
-        image: response.data.image || '',
+        image: response.data.image || "",
       });
     } catch (error) {
       handleErrors(error);
@@ -74,12 +75,12 @@ const EditProductModal = ({
     } else {
       setProduct(null);
       setFormData({
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         price: 0,
-        category: '',
+        category: "",
         stock: 0,
-        image: '',
+        image: "",
       });
     }
   }, [isOpen, productId]);
@@ -88,20 +89,20 @@ const EditProductModal = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === 'price' || name === 'stock'
-          ? Number(value)
-          : value,
+      [name]: name === "price" || name === "stock" ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const response = await authAxios.put(`/products/${productId}/update/`, formData);
-      console.log('Updated:', response.data);
+      const response = await authAxios.put(
+        `/products/${productId}/update/`,
+        formData
+      );
+      console.log("Updated:", response.data);
       onOpenChange(false);
       onEditSuccess(response.data);
     } catch (error) {
@@ -138,7 +139,7 @@ const EditProductModal = ({
                 <Input
                   name="price"
                   type="number"
-                  value={formData.price}
+                  value={formData.price.toString()}
                   onChange={handleInputChange}
                   placeholder="Price"
                   className="mb-4"
@@ -155,7 +156,7 @@ const EditProductModal = ({
                 <Input
                   name="stock"
                   type="number"
-                  value={formData.stock}
+                  value={formData.stock.toString()}
                   onChange={handleInputChange}
                   placeholder="Stock"
                   className="mb-4"
@@ -165,7 +166,12 @@ const EditProductModal = ({
                   <img
                     src={formData.image}
                     alt={formData.name}
-                    style={{ maxWidth: '100%', maxHeight: 200, marginBottom: 20, borderRadius: 8 }}
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: 200,
+                      marginBottom: 20,
+                      borderRadius: 8,
+                    }}
                   />
                 ) : (
                   <p>No image available</p>

@@ -1,85 +1,95 @@
 import {
   Button,
- 
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
- 
 } from '@heroui/react';
 
+import { useEffect, useState } from 'react';
 import { handleErrors } from '../../libs/handle-errors';
-
+import { authAxios } from '../../serverUrl';
 
 interface ProductModalProps {
   isOpen: boolean;
   title: string;
+  productId: number;
   onOpenChange: (isOpen: boolean) => void;
+  onDeleteSuccess: (id: number) => void;
 }
+
 const DeleteProductModal = ({
   isOpen,
   onOpenChange,
   title,
+  productId,
+  onDeleteSuccess,
 }: ProductModalProps) => {
+  const [product, setProduct] = useState<any>(null);
 
-
-  const handleDelete = async () => {
+  const fetchProduct = async () => {
     try {
-      // const formData = new FormData();
-      // formData.append("name", data.name);
-      // formData.append("category", data.category);
-      // formData.append("price", data.price.toString());
-      // formData.append("description", data.description);
-      // if (data.image) {
-      //   formData.append("image", data.image);
-      // }
-   
-      onOpenChange(false);
-      console.log();
-    } catch (errors) {
-      handleErrors(errors);
+      const response = await authAxios.get(`/products/${productId}/`);
+      setProduct(response.data);
+    } catch (error) {
+      handleErrors(error);
     }
   };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await authAxios.delete(`/products/${id}/delete/`);
+      onOpenChange(false);
+      onDeleteSuccess(id);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && productId) {
+      fetchProduct();
+    }
+  }, [isOpen, productId]);
 
   return (
     <section>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="lg">
         <ModalContent>
-          {' '}
-          <ModalHeader>{title}</ModalHeader>
-          
+          <ModalHeader>Delete Product</ModalHeader>
           <ModalBody>
-         Arev you sure you want to delete this product? This action cannot be undone.
+            {product ? (
+              <>
+                <p>Are you sure you want to delete this product?</p>
+                <strong>{product.name}</strong> – {product.description}
+              </>
+            ) : (
+              <p>Loading product...</p>
+            )}
           </ModalBody>
           <ModalFooter>
-           <Button
-              className=" my-4  text-white"
-              color="primary"
+            <Button
+              className="my-4 text-white"
+              color="default"
               fullWidth
               radius="full"
-              type="submit"
-              onClick={() => {
-                onOpenChange(false);
-              }}
+              onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
 
             <Button
-              className=" my-4  text-white"
-              color="primary"
+              className="my-4 text-white"
+              color="danger"
               fullWidth
               radius="full"
-              type="submit"
-              onClick={() => {
-                handleDelete();
-                onOpenChange(false);
-              }}
+              onClick={() => handleDelete(productId)}
+              disabled={!product}
             >
               Delete
             </Button>
-          </ModalFooter>{' '}
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </section>

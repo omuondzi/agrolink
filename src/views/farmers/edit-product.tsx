@@ -1,68 +1,113 @@
 import {
   Button,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
-  Select,
-  SelectItem,
+  Input,
   Textarea,
 } from '@heroui/react';
 
-import { Controller, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { handleErrors } from '../../libs/handle-errors';
-import {
-  DefaultPostProductData,
-  PostProductFormData,
-  PostProductSchema,
-} from './post-product-validation';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { authAxios } from '../../serverUrl';
-
-const categories = [
-  { key: 'vegetable', label: 'Vegetable' },
-  { key: 'fruit', label: 'Fruit' },
-  { key: 'dairy', label: 'Dairy' },
-  { key: 'grain', label: 'Grain' },
-];
 
 interface ProductModalProps {
   isOpen: boolean;
   title: string;
+  productId: number;
   onOpenChange: (isOpen: boolean) => void;
+  onEditSuccess: (updatedProduct: ProductData & { id: number }) => void;
 }
+
+interface ProductData {
+  image?: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  stock: number;
+}
+
 const EditProductModal = ({
   isOpen,
   onOpenChange,
   title,
+  productId,
+  onEditSuccess,
 }: ProductModalProps) => {
-  const methods = useForm<PostProductFormData>({
-    resolver: yupResolver(PostProductSchema),
-    defaultValues: DefaultPostProductData,
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [formData, setFormData] = useState<ProductData>({
+    name: '',
+    description: '',
+    price: 0,
+    category: '',
+    stock: 0,
+    image: '',
   });
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = methods;
+  const [loading, setLoading] = useState(false);
 
-  const handlePost = async (data: PostProductFormData) => {
+  const fetchProduct = async () => {
     try {
-      // const formData = new FormData();
-      // formData.append("name", data.name);
-      // formData.append("category", data.category);
-      // formData.append("price", data.price.toString());
-      // formData.append("description", data.description);
-      // if (data.image) {
-      //   formData.append("image", data.image);
-      // }
-      const response = await authAxios.post('products/create', data);
-      console.log('Product posted successfully:', response.data);
+      setLoading(true);
+      const response = await authAxios.get(`/products/${productId}/`);
+      setProduct(response.data);
+      setFormData({
+        name: response.data.name,
+        description: response.data.description,
+        price: response.data.price,
+        category: response.data.category,
+        stock: response.data.stock,
+        image: response.data.image || '',
+      });
+    } catch (error) {
+      handleErrors(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && productId) {
+      fetchProduct();
+    } else {
+      setProduct(null);
+      setFormData({
+        name: '',
+        description: '',
+        price: 0,
+        category: '',
+        stock: 0,
+        image: '',
+      });
+    }
+  }, [isOpen, productId]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]:
+        name === 'price' || name === 'stock'
+          ? Number(value)
+          : value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const response = await authAxios.put(`/products/${productId}/update/`, formData);
+      console.log('Updated:', response.data);
       onOpenChange(false);
-      console.log(data);
-    } catch (errors) {
-      handleErrors(errors);
+      onEditSuccess(response.data);
+    } catch (error) {
+      handleErrors(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,131 +115,88 @@ const EditProductModal = ({
     <section>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="lg">
         <ModalContent>
-          {' '}
           <ModalHeader>{title}</ModalHeader>
           <ModalBody>
-            <form
-              onSubmit={handleSubmit(handlePost)}
-              className="w-full md:w-[300px] mt-5 mb-2 container"
-            >
-              <div className="mb-3">
-                <Controller
+            {loading ? (
+              <p>Loading...</p>
+            ) : product ? (
+              <>
+                <Input
                   name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      label="Enter Product Name"
-                      type="email"
-                      radius="full"
-                      isInvalid={!!errors?.name}
-                      errorMessage={errors?.name?.message}
-                    />
-                  )}
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Product Name"
+                  className="mb-4"
                 />
-              </div>
-              <div className="mb-3">
-                <Controller
-                  name="category"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      radius="full"
-                      className="max-w-xs"
-                      label="Enter product category"
-                      onChange={field.onChange}
-                      value={field.value}
-                      isInvalid={!!errors.category}
-                      errorMessage={!!errors.category?.message}
-                    >
-                      {categories.map((category) => (
-                        <SelectItem key={category.key}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </div>
-              <div className="mb-3">
-                <Controller
-                  control={control}
-                  name="price"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      label="Enter Product Price"
-                      type="number"
-                      value={field.value?.toString() || ''}
-                      onChange={(event) => field.onChange(event.target.value)}
-                      placeholder="2,500.00"
-                      radius="full"
-                      isInvalid={!!errors.price}
-                      errorMessage={errors.price?.message}
-                    />
-                  )}
-                />
-              </div>
-              <div className="mb-3">
-                <Controller
+                <Textarea
                   name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Textarea
-                      {...field}
-                      label="Enter Product Description"
-                      type="email"
-                      radius="full"
-                      isInvalid={!!errors?.description}
-                      errorMessage={errors?.description?.message}
-                    />
-                  )}
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Description"
+                  className="mb-4"
                 />
-              </div>
-
-              {/* ✅ Image Upload Field */}
-              <div className="mb-3">
-                <Controller
-                  name="image"
-                  control={control}
-                  render={({ field }) => (
-                    <div className="flex flex-col gap-2">
-                      <label className="font-medium text-gray-500 ">
-                        Upload Product Image
-                      </label>
-                      <input
-                        type="file"
-                        className=" border-none text-sm"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          field.onChange(file);
-                        }}
-                      />
-                      {field.value && typeof field.value === 'object' && (
-                        <img
-                          src={URL.createObjectURL(field.value)}
-                          alt="Preview"
-                          className="mt-2 w-32 h-32 object-cover rounded-md border"
-                        />
-                      )}
-                    </div>
-                  )}
+                <Input
+                  name="price"
+                  type="number"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="Price"
+                  className="mb-4"
+                  min={0}
+                  step={0.01}
                 />
-              </div>
-
-              <Button
-                className=" my-4  text-white"
-                color="primary"
-                fullWidth
-                radius="full"
-                type="submit"
-                isLoading={isSubmitting}
-              >
-                Post
-              </Button>
-            </form>
+                <Input
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  placeholder="Category"
+                  className="mb-4"
+                />
+                <Input
+                  name="stock"
+                  type="number"
+                  value={formData.stock}
+                  onChange={handleInputChange}
+                  placeholder="Stock"
+                  className="mb-4"
+                  min={0}
+                />
+                {formData.image ? (
+                  <img
+                    src={formData.image}
+                    alt={formData.name}
+                    style={{ maxWidth: '100%', maxHeight: 200, marginBottom: 20, borderRadius: 8 }}
+                  />
+                ) : (
+                  <p>No image available</p>
+                )}
+              </>
+            ) : (
+              <p>Loading product...</p>
+            )}
           </ModalBody>
+          <ModalFooter>
+            <Button
+              className="my-4"
+              color="default"
+              fullWidth
+              radius="full"
+              onClick={() => onOpenChange(false)}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="my-4"
+              color="primary"
+              fullWidth
+              radius="full"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              Save Changes
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </section>

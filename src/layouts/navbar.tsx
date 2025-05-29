@@ -1,4 +1,14 @@
-import { Button, Drawer, DrawerContent, Input } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  DrawerContent,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+} from "@heroui/react";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import { Icon } from "@iconify/react";
@@ -110,14 +120,45 @@ const LandingNavbar = () => {
           />
 
           {isAuthenticated ? (
-            <Button
-              radius="none"
-              className="bg-black text-white"
-              onClick={handleLogout}
-            >
-              Sign Out
-            </Button>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  variant="solid"
+                  className="bg-primary-200"
+                  endContent={<Icon icon="mingcute:down-line" />}
+                >
+                  <Avatar src="/images/dp2.png" size="sm" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Dropdown menu with icons"
+                variant="solid"
+                color="primary"
+              >
+                <DropdownItem
+                  key="profile"
+                  href="/profile"
+                  endContent={<Icon icon="streamline:user-profile-focus" />}
+                >
+                  View profile
+                </DropdownItem>
+                <DropdownItem
+                  key="logout"
+                  onClick={handleLogout}
+                  endContent={<Icon icon="bx:log-out" />}
+                >
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           ) : (
+            // <Button
+            //   radius="none"
+            //   className="bg-black text-white"
+            //   onClick={handleLogout}
+            // >
+            //   Sign Out
+            // </Button>
             <Button
               radius="none"
               className="bg-black text-white"

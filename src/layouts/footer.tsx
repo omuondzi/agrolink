@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { Link as HeroUiLink } from "@heroui/react";
 import { Subtitle, Subtitle2 } from "../components/typography";
-import { Button, Input } from "@heroui/react";
 import { FOOTERLINKS, SUPPORT } from "./config";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const LandingFooter = () => {
   return (
@@ -35,44 +36,31 @@ const LandingFooter = () => {
           <Subtitle className="text-primary-50 font-semibold">Support</Subtitle>
           <div className=" flex flex-col gap-1 pl-3">
             {SUPPORT.map((link, index) => (
-              <Link
-                to={link.path}
+              <HeroUiLink
+                isDisabled
+                href={link.path}
                 key={index}
-                className="text-grey font-semibold"
+                className="text-gray-300 font-semibold"
               >
                 {link.label}
-              </Link>
+              </HeroUiLink>
             ))}
           </div>
         </div>
         <div className="col-span-2">
-          <Subtitle2 className="text-primary-50 font-semibold">
-            Subscribe to our monthly Newsletter
-          </Subtitle2>
-          <p className="text-[13px] text-grey font-semibold">
-            Subscribe to get updates about local produce and farmers.
-          </p>
-
-          <Input
-            classNames={{
-              inputWrapper: "pr-0",
-            }}
-            className="my-3"
-            placeholder="Enter your email"
-            radius="none"
-            size="sm"
-            endContent={
-              <Button
-                type="submit"
-                color="primary"
-                radius="none"
-                size="sm"
-                className="bg-black"
-              >
-                Subscribe
-              </Button>
-            }
-          />
+          <Subtitle className="text-primary-50 font-semibold">
+            Follow our socials
+          </Subtitle>
+          <div className="flex justify-between w-full py-3 ">
+            {[
+              "mdi:instagram",
+              "ic:baseline-facebook",
+              "proicons:x-twitter",
+              "mage:linkedin",
+            ].map((item, index) => (
+              <Icon key={index} icon={item} fontSize={30} color="#ffffff" />
+            ))}
+          </div>
         </div>
       </section>
     </footer>

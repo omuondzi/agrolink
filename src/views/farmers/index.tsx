@@ -1,6 +1,8 @@
 import { Button, Image, useDisclosure } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import AddProductModal from "./product-modal";
+import DeleteProductModal from "./delete-product-modal";
+import EditProductModal from "./edit-product";
 
 import { useEffect, useState } from "react";
 import { Subtitle, Subtitle2 } from "../../components/typography";
@@ -12,6 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { handleErrors } from "../../libs/handle-errors";
 
 type FarmerProduct = {
+  id: number;
   image: string;
   name: string;
   price: number;
@@ -36,6 +39,22 @@ const FarmersPageView = () => {
     onOpen: onEditOpen,
     onOpenChange: onEditOpenChange,
   } = useDisclosure();
+  const {
+    isOpen: isAddOpen,
+    onOpen: onAddOpen,
+    onOpenChange: onAddOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onOpenChange: onDeleteOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onOpenChange: onEditOpenChange,
+  } = useDisclosure();
+
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
   const [like, setLike] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -77,22 +96,37 @@ const FarmersPageView = () => {
       navigate("/auth/login");
     }
   };
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null
+  );
   const navigate = useNavigate();
 
   const handleFarmerProducts = async () => {
     try {
       const response = await authAxios.get("products/my-products/");
       setFarmerProducts(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching farmer products:", error);
     }
   };
 
+  const handleProductDeleted = (deletedId: number) => {
+    setFarmerProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== deletedId)
+    );
+  };
+
+  const handleProductEdited = (updatedProduct: FarmerProduct) => {
+    setFarmerProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    );
+  };
+
   useEffect(() => {
     const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
-    console.log(user);
 
     if (!user || user.role !== "farmer") {
       navigate("/");
@@ -114,6 +148,7 @@ const FarmersPageView = () => {
           >
             Add Product
           </Button>
+
           <AddProductModal
             title="Post Your Produce"
             isOpen={isAddOpen}
@@ -124,16 +159,22 @@ const FarmersPageView = () => {
             title="Delete product"
             isOpen={isDeleteOpen}
             onOpenChange={onDeleteOpenChange}
+            productId={selectedProductId ?? 0}
+            onDeleteSuccess={handleProductDeleted}
           />
+
           <EditProductModal
             title="Edit product details"
             isOpen={isEditOpen}
             onOpenChange={onEditOpenChange}
+            productId={selectedProductId ?? 0}
+            onEditSuccess={handleProductEdited}
           />
         </div>
+
         <section className="grid md:grid-cols-3 gap-2 gap-y-4 py-3">
-          {farmerProducts.map((product, index) => (
-            <div key={index} className="bg-white rounded-lg pb-4">
+          {farmerProducts.map((product) => (
+            <div key={product.id} className="bg-white rounded-lg pb-4">
               <Image
                 src={product.image}
                 radius="none"
@@ -176,7 +217,10 @@ const FarmersPageView = () => {
                     size="sm"
                     className="bg-none text-blue-600 border-none"
                     variant="ghost"
-                    onPress={onEditOpen}
+                    onPress={() => {
+                      setSelectedProductId(product.id);
+                      onEditOpen();
+                    }}
                   >
                     <Icon
                       icon="material-symbols:edit-outline-rounded"
@@ -189,7 +233,10 @@ const FarmersPageView = () => {
                     size="sm"
                     className="bg-none text-red-600 border-none"
                     variant="ghost"
-                    onPress={onDeleteOpen}
+                    onPress={() => {
+                      setSelectedProductId(product.id);
+                      onDeleteOpen();
+                    }}
                   >
                     <Icon
                       icon="material-symbols:delete-outline"

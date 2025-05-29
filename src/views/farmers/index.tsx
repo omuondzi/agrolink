@@ -111,7 +111,7 @@ const FarmersPageView = () => {
               <div className="w-[90%] mx-auto">
                 <div className="flex justify-between font-semibold pt-2">
                   <Subtitle>{product.name}</Subtitle>
-                  <Subtitle2>KSH {product.price}/fruit</Subtitle2>
+                  <Subtitle2>KSH {product.price}</Subtitle2>
                 </div>
                 <Subtitle2 className="text-graytext">
                   {product.description}

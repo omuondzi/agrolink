@@ -31,7 +31,7 @@ const skills = [
 const StatsSection = () => {
   return (
     <section className="text-black m-4">
-      <section className="container max-w-[75%] mx-auto grid md:grid-cols-2 gap-[3rem] py-[7rem]">
+      <section className="container max-w-[75%] mx-auto grid md:grid-cols-2 gap-[3rem] py-[3rem]">
         <section className="flex flex-col gap-y-[2rem]">
           <div className="flex items-center gap-[1rem] text-primary  ">
             <hr className="w-10 bg-primary h-[0.15rem]" />

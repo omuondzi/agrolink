@@ -1,5 +1,6 @@
 import { Button } from "@heroui/react";
 import { H2, Paragraph } from "../../components/typography";
+import { Link } from "react-router-dom";
 const backgroundImage = "/images/hero.jpg";
 const HeroSection = () => {
   return (
@@ -15,10 +16,20 @@ const HeroSection = () => {
               produce delivered to your doorstep.
             </Paragraph>
             <div className="flex gap-[1rem]">
-              <Button radius="sm" className="text-white bg-black">
+              <Button
+                as={Link}
+                to={"/products/vegetables"}
+                radius="sm"
+                className="text-white bg-black"
+              >
                 Start Shopping
               </Button>
-              <Button radius="sm" className="text-black bg-white">
+              <Button
+                as={Link}
+                to={"/farmers"}
+                radius="sm"
+                className="text-black bg-white"
+              >
                 Become a Seller
               </Button>
             </div>

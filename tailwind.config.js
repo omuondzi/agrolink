@@ -15,13 +15,14 @@ module.exports = {
         graytext: "#737373",
         grey: "#668a88",
         lightbg: "#f6f5f3",
+        primary: "#034d3a",
       },
     },
   },
   plugins: [
     heroui({
       themes: {
-        "platform-theme": {
+        platformTheme: {
           colors: {
             primary: {
               DEFAULT: "#034d3a",

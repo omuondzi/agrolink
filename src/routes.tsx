@@ -15,6 +15,8 @@ import VegetablesPage from "./views/products/vegetables";
 import FruitsPage from "./views/products/fruits";
 import GrainsPage from "./views/products/grain";
 import DairyPage from "./views/products/dairy";
+import ProfilePage from "./pages/profile";
+import LikedPageView from "./views/liked-products";
 
 const Router = () => {
   const routes = useRoutes([
@@ -59,6 +61,14 @@ const Router = () => {
               <FarmersPage />
             </ProtectedRoute>
           ),
+        },
+        {
+          path: "profile",
+          element: <ProfilePage />,
+        },
+        {
+          path: "liked-products",
+          element: <LikedPageView />,
         },
         {
           path: "*",

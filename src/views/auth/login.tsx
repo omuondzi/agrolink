@@ -26,7 +26,8 @@ const LoginPageView = () => {
     resolver: yupResolver(LoginFormSchema),
     defaultValues: DefaultLoginForm,
   });
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const updateShowPasswordState = () => setShowPassword((prev) => !prev);
   const {

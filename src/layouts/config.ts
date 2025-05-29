@@ -30,21 +30,21 @@ export type FooterLink = {
 
 export const FOOTERLINKS: FooterLink[] = [
   {
+    label: "Home",
+    path: "/",
+  },
+  {
     label: "About Us",
-    path: "/about-us",
+    path: "/about",
   },
 
   {
-    label: "How It Works",
-    path: "/how-it-works",
+    label: "Products",
+    path: "/products/vegetables",
   },
   {
-    label: "Featured Farmers",
-    path: "/featured-farmers",
-  },
-  {
-    label: "Blog",
-    path: "/blog",
+    label: "Farmers",
+    path: "/farmers",
   },
 ];
 

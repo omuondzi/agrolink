@@ -6,10 +6,13 @@ import EditProductModal from './edit-product';
 
 import { useEffect, useState } from 'react';
 import { Subtitle, Subtitle2 } from '../../components/typography';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { authAxios } from '../../serverUrl';
 
-type FarmerProduct = {
+import { enqueueSnackbar } from 'notistack';
+import { handleErrors } from '../../libs/handle-errors';
+
+export type FarmerProduct = {
   id: number;
   image: string;
   name: string;
@@ -17,25 +20,89 @@ type FarmerProduct = {
   description: string;
   rating: number;
   tel: string;
+  liked: boolean;
 };
 
 const FarmersPageView = () => {
-  const { isOpen: isAddOpen, onOpen: onAddOpen, onOpenChange: onAddOpenChange } = useDisclosure();
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onOpenChange: onDeleteOpenChange } = useDisclosure();
-  const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
+  const {
+    isOpen: isAddOpen,
+    onOpen: onAddOpen,
+    onOpenChange: onAddOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onOpenChange: onDeleteOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onOpenChange: onEditOpenChange,
+  } = useDisclosure();
 
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
-  const navigate = useNavigate();
+  const [like, setLike] = useState<{ [productId: number]: boolean }>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const handleFarmerProducts = async () => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    // setIsAuthenticated(!!token);
+    setIsAuthenticated(token !== null);
+  }, []);
+
+  const handleLike = async (id: number) => {
     try {
-      const response = await authAxios.get('products/my-products/');
-      setFarmerProducts(response.data);
+      const response = await authAxios.patch(`/products/${id}/like/`);
+
+      setLike((prev) => ({
+        ...prev,
+        [id]: response.data.liked, // true or false from backend
+      }));
+
+      if (response.data.liked) {
+        enqueueSnackbar('Added to likes', { variant: 'success' });
+      } else {
+        enqueueSnackbar('Removed from likes', { variant: 'error' });
+      }
     } catch (error) {
-      console.error('Error fetching farmer products:', error);
+      handleErrors(error);
     }
   };
+
+  // const handleUnlike = async () => {
+  //   try {
+  //     await publicAxios.patch(`/blog/${id}/unlike`);
+  //   } catch (error) {
+  //     setLike((prev) => !prev);
+  //     handleErrors(error);
+  //   }
+  // };
+
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null
+  );
+  const navigate = useNavigate();
+
+
+
+
+
+  const handleFarmerProducts = async () => {
+  try {
+    const response = await authAxios.get('products/my-products/');
+    setFarmerProducts(response.data);
+
+    const likeMap = Object.fromEntries(
+      response.data.map((product: FarmerProduct) => [product.id, product.liked])
+    );
+    setLike(likeMap); // <- persists the state on reload
+  } catch (error) {
+    console.error('Error fetching farmer products:', error);
+  }
+};
+
+
 
   const handleProductDeleted = (deletedId: number) => {
     setFarmerProducts((prevProducts) =>
@@ -43,14 +110,13 @@ const FarmersPageView = () => {
     );
   };
 
-
   const handleProductEdited = (updatedProduct: FarmerProduct) => {
-  setFarmerProducts((prevProducts) =>
-    prevProducts.map((product) =>
-      product.id === updatedProduct.id ? updatedProduct : product
-    )
-  );
-};
+    setFarmerProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    );
+  };
 
   useEffect(() => {
     const userJson = localStorage.getItem('user');
@@ -118,33 +184,43 @@ const FarmersPageView = () => {
                 </Subtitle2>
                 <div className="flex justify-between items-center py-4">
                   <Subtitle2 className="flex items-center gap-1 pt-3">
-                    <Icon icon="material-symbols:star-rounded" color="#fcce10" />
+                    <Icon
+                      icon="material-symbols:star-rounded"
+                      color="#fcce10"
+                    />
                     {product.rating}
                   </Subtitle2>
                   <Button
-                    radius="none"
+                    onClick={() => handleLike(product.id)}
                     isIconOnly
-                    size="sm"
-                    className="bg-none text-green-600 border-none"
-                    variant="ghost"
-                    as={Link}
-                    to={`tel:${product.tel}`}
+                    className="bg-transparent"
                   >
-                    <Icon icon="weui:like-filled" fontSize={20} />
+                    <Icon
+                      icon={
+                        like[product.id]
+                          ? 'flat-color-icons:like'
+                          : 'icon-park-outline:like'
+                      }
+                      color={like[product.id] ? 'red' : 'black'}
+                      fontSize="30"
+                    />
                   </Button>
+
                   <Button
                     radius="none"
                     isIconOnly
                     size="sm"
                     className="bg-none text-blue-600 border-none"
                     variant="ghost"
-                     onPress={() => {
+                    onPress={() => {
                       setSelectedProductId(product.id);
-                      onEditOpen()
+                      onEditOpen();
                     }}
-                    
                   >
-                    <Icon icon="material-symbols:edit-outline-rounded" fontSize={20} />
+                    <Icon
+                      icon="material-symbols:edit-outline-rounded"
+                      fontSize={20}
+                    />
                   </Button>
                   <Button
                     radius="none"
@@ -157,7 +233,10 @@ const FarmersPageView = () => {
                       onDeleteOpen();
                     }}
                   >
-                    <Icon icon="material-symbols:delete-outline" fontSize={20} />
+                    <Icon
+                      icon="material-symbols:delete-outline"
+                      fontSize={20}
+                    />
                   </Button>
                 </div>
               </div>

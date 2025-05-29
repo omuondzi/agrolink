@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { handleErrors } from '../../libs/handle-errors';
 import { authAxios } from '../../serverUrl';
+import { FarmerProduct } from '.';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -26,8 +27,9 @@ const DeleteProductModal = ({
   productId,
   onDeleteSuccess,
 }: ProductModalProps) => {
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<FarmerProduct>();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchProduct = async () => {
     try {
       const response = await authAxios.get(`/products/${productId}/`);
@@ -51,7 +53,7 @@ const DeleteProductModal = ({
     if (isOpen && productId) {
       fetchProduct();
     }
-  }, [isOpen, productId]);
+  }, [fetchProduct, isOpen, productId]);
 
   return (
     <section>

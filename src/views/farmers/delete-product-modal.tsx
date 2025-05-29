@@ -22,7 +22,7 @@ interface ProductModalProps {
 const DeleteProductModal = ({
   isOpen,
   onOpenChange,
-  title,
+  // title,
   productId,
   onDeleteSuccess,
 }: ProductModalProps) => {

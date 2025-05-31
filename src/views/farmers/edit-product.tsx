@@ -9,7 +9,7 @@ import {
   Textarea,
 } from "@heroui/react";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { handleErrors } from "../../libs/handle-errors";
 import { authAxios } from "../../serverUrl";
 import { FarmerProduct } from ".";
@@ -50,41 +50,42 @@ const EditProductModal = ({
   const [loading, setLoading] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchProduct = async () => {
-    try {
-      setLoading(true);
-      const response = await authAxios.get(`/products/${productId}/`);
-      setProduct(response.data);
-      setFormData({
-        name: response.data.name,
-        description: response.data.description,
-        price: response.data.price,
-        category: response.data.category,
-        stock: response.data.stock,
-        image: response.data.image || "",
-      });
-    } catch (error) {
-      handleErrors(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchProduct = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await authAxios.get(`/products/${productId}/`);
+    setProduct(response.data);
+    setFormData({
+      name: response.data.name,
+      description: response.data.description,
+      price: response.data.price,
+      category: response.data.category,
+      stock: response.data.stock,
+      image: response.data.image || "",
+    });
+  } catch (error) {
+    handleErrors(error);
+  } finally {
+    setLoading(false);
+  }
+}, [productId]);
 
-  useEffect(() => {
-    if (isOpen && productId) {
-      fetchProduct();
-    } else {
-      setProduct(null);
-      setFormData({
-        name: "",
-        description: "",
-        price: 0,
-        category: "",
-        stock: 0,
-        image: "",
-      });
-    }
-  }, [fetchProduct, isOpen, productId]);
+useEffect(() => {
+  if (isOpen && productId) {
+    fetchProduct();
+  } else {
+    setProduct(null);
+    setFormData({
+      name: "",
+      description: "",
+      price: 0,
+      category: "",
+      stock: 0,
+      image: "",
+    });
+  }
+}, [fetchProduct, isOpen, productId]);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

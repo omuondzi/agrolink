@@ -1,4 +1,3 @@
-
 import { Button, Image } from "@heroui/react";
 import { Subtitle, Subtitle2 } from "../../../components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -7,39 +6,49 @@ import { useProducts } from "../context/ProductsContext";
 import { handleErrors } from "../../../libs/handle-errors";
 import { enqueueSnackbar } from "notistack";
 import { authAxios } from "../../../serverUrl";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 
 const GrainsPage = () => {
   const { products } = useProducts(); // ✅ Get all products from context
   const [like, setLike] = useState<{ [productId: number]: boolean }>({});
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  console.log("Vegetables products:", products);
-  const vegetableProducts = products.filter(
+  const grainProducts = products.filter(
     (product) => product.category?.toLowerCase() === "grains"
   );
 
-
-    const handleLike = async (id: number) => {
+  // Load user role from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
       try {
-        const response = await authAxios.patch(`/products/${id}/like/`);
-  
-        setLike((prev) => ({
-          ...prev,
-          [id]: response.data.liked, // true or false from backend
-        }));
-  
-        if (response.data.liked) {
-          enqueueSnackbar('Added to likes', { variant: 'success' });
-        } else {
-          enqueueSnackbar('Removed from likes', { variant: 'error' });
-        }
-      } catch (error) {
-        handleErrors(error);
+        const parsedUser = JSON.parse(storedUser);
+        setUserRole(parsedUser.role);
+      } catch {
+        setUserRole(null);
       }
-    };
+    }
+  }, []);
 
-    
+  const handleLike = async (id: number) => {
+    try {
+      const response = await authAxios.patch(`/products/${id}/like/`);
+
+      setLike((prev) => ({
+        ...prev,
+        [id]: response.data.liked, // true or false from backend
+      }));
+
+      if (response.data.liked) {
+        enqueueSnackbar("Added to likes", { variant: "success" });
+      } else {
+        enqueueSnackbar("Removed from likes", { variant: "error" });
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   return (
     <section>
       <div className="border-b-3 border-primary p-[0.5rem] w-full">
@@ -47,9 +56,13 @@ const GrainsPage = () => {
       </div>
       <div>
         <section className="container grid md:grid-cols-3 gap-2 gap-y-4 py-3">
-          {vegetableProducts.map((product, index) => (
+          {grainProducts.map((product, index) => (
             <div key={index} className="bg-white rounded-lg pb-4">
-              <Image src={product.image} radius="none" className="w-full rounded-t-xl" />
+              <Image
+                src={product.image}
+                radius="none"
+                className="w-full rounded-t-xl"
+              />
               <div className="w-[90%] mx-auto">
                 <div className="flex justify-between font-semibold pt-2">
                   <Subtitle2>{product.name}</Subtitle2>
@@ -62,21 +75,24 @@ const GrainsPage = () => {
                     {product.rating}
                   </Subtitle2>
 
-                   <Button
-                    onClick={() => handleLike(product.id)}
-                    isIconOnly
-                    className="bg-transparent"
-                  >
-                    <Icon
-                      icon={
-                        like[product.id]
-                          ? 'flat-color-icons:like'
-                          : 'icon-park-outline:like'
-                      }
-                      color={like[product.id] ? 'red' : 'black'}
-                      fontSize="30"
-                    />
-                  </Button>
+                  {/* Show Like button only if userRole !== 'farmer' */}
+                  {userRole !== "farmer" && (
+                    <Button
+                      onClick={() => handleLike(product.id)}
+                      isIconOnly
+                      className="bg-transparent"
+                    >
+                      <Icon
+                        icon={
+                          like[product.id]
+                            ? "flat-color-icons:like"
+                            : "icon-park-outline:like"
+                        }
+                        color={like[product.id] ? "red" : "black"}
+                        fontSize="30"
+                      />
+                    </Button>
+                  )}
 
                   <Button
                     radius="none"

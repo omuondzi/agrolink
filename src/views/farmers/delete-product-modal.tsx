@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { handleErrors } from '../../libs/handle-errors';
 import { authAxios } from '../../serverUrl';
 import { FarmerProduct } from '.';
+import { enqueueSnackbar } from 'notistack';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -23,13 +24,12 @@ interface ProductModalProps {
 const DeleteProductModal = ({
   isOpen,
   onOpenChange,
-  // title,
   productId,
   onDeleteSuccess,
 }: ProductModalProps) => {
   const [product, setProduct] = useState<FarmerProduct>();
+  const [hasDeleted, setHasDeleted] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchProduct = async () => {
     try {
       const response = await authAxios.get(`/products/${productId}/`);
@@ -42,18 +42,28 @@ const DeleteProductModal = ({
   const handleDelete = async (id: number) => {
     try {
       await authAxios.delete(`/products/${id}/delete/`);
+      setHasDeleted(true);
       onOpenChange(false);
       onDeleteSuccess(id);
+      enqueueSnackbar('Product deleted successfully', {
+        variant: 'success',
+      });
     } catch (error) {
-      handleErrors(error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    if (isOpen && productId) {
+    if (isOpen) {
+      setHasDeleted(false); // Reset flag when modal opens
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && productId && !hasDeleted) {
       fetchProduct();
     }
-  }, [fetchProduct, isOpen, productId]);
+  }, [isOpen, productId, hasDeleted]);
 
   return (
     <section>

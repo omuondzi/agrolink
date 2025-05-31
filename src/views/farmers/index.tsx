@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { authAxios } from '../../serverUrl';
 
 import { enqueueSnackbar } from 'notistack';
-import { handleErrors } from '../../libs/handle-errors';
+// import { handleErrors } from '../../libs/handle-errors';
 
 export type FarmerProduct = {
   id: number;
@@ -41,7 +41,7 @@ const FarmersPageView = () => {
   } = useDisclosure();
 
   const [farmerProducts, setFarmerProducts] = useState<FarmerProduct[]>([]);
-  const [like, setLike] = useState<{ [productId: number]: boolean }>({});
+  const [, setLike] = useState<{ [productId: number]: boolean }>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -51,38 +51,32 @@ const FarmersPageView = () => {
     setIsAuthenticated(token !== null);
   }, []);
 
-  const handleLike = async (id: number) => {
-    try {
-      const response = await authAxios.patch(`/products/${id}/like/`);
 
-      setLike((prev) => ({
-        ...prev,
-        [id]: response.data.liked, // true or false from backend
-      }));
+const navigate = useNavigate();
 
-      if (response.data.liked) {
-        enqueueSnackbar('Added to likes', { variant: 'success' });
-      } else {
-        enqueueSnackbar('Removed from likes', { variant: 'error' });
-      }
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  setIsAuthenticated(token !== null);
+  const userJson = localStorage.getItem('user');
+  const user = userJson ? JSON.parse(userJson) : null;
 
-  // const handleUnlike = async () => {
-  //   try {
-  //     await publicAxios.patch(`/blog/${id}/unlike`);
-  //   } catch (error) {
-  //     setLike((prev) => !prev);
-  //     handleErrors(error);
-  //   }
-  // };
+  if (!user || user.role !== 'farmer') {
+    enqueueSnackbar('Only farmers can access this page.', { variant: 'error' });
+    navigate('/');
+    return;
+  }
+
+  handleFarmerProducts();
+}, [navigate]);
+
+
+ 
+
 
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
-  const navigate = useNavigate();
+
 
 
 
@@ -182,15 +176,15 @@ const FarmersPageView = () => {
                 <Subtitle2 className="text-graytext">
                   {product.description}
                 </Subtitle2>
-                <div className="flex justify-between items-center py-4">
-                  <Subtitle2 className="flex items-center gap-1 pt-3">
+                <div className="flex justify-around items-center py-4">
+                  {/* <Subtitle2 className="flex items-center gap-1 pt-3">
                     <Icon
                       icon="material-symbols:star-rounded"
                       color="#fcce10"
                     />
                     {product.rating}
-                  </Subtitle2>
-                  <Button
+                  </Subtitle2> */}
+                  {/* <Button
                     onClick={() => handleLike(product.id)}
                     isIconOnly
                     className="bg-transparent"
@@ -204,7 +198,7 @@ const FarmersPageView = () => {
                       color={like[product.id] ? 'red' : 'black'}
                       fontSize="30"
                     />
-                  </Button>
+                  </Button> */}
 
                   <Button
                     radius="none"

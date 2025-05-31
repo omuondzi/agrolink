@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "d3-ease": "^3.0.1",
     "framer-motion": "^12.6.3",
+    "jwt-decode": "^4.0.0",
     "notistack": "^3.0.2",
     "react": "^19.0.0",
     "react-circular-progressbar": "^2.2.0",

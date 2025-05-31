@@ -1,27 +1,27 @@
-import { useRoutes } from "react-router-dom";
-import LandingLayout from "./layouts";
-import HomePage from "./pages/home";
-import NotFoundPage from "./pages/not-found";
-import AboutPage from "./pages/about";
-import ProductsPage from "./pages/products";
-import FarmersPage from "./pages/farmers";
-import AuthLayout from "./layouts/auth";
-import SignUpPage from "./pages/auth/signup";
-import LoginPage from "./pages/auth/login";
-import ForgotPassworPage from "./pages/auth/forgot-password";
-import ResetPasswordPage from "./pages/auth/reset-password";
-import ProtectedRoute from "./ProtectedRoute";
-import VegetablesPage from "./views/products/vegetables";
-import FruitsPage from "./views/products/fruits";
-import GrainsPage from "./views/products/grain";
-import DairyPage from "./views/products/dairy";
-import ProfilePage from "./pages/profile";
-import LikedPageView from "./views/liked-products";
+import { useRoutes } from 'react-router-dom';
+import LandingLayout from './layouts';
+import HomePage from './pages/home';
+import NotFoundPage from './pages/not-found';
+import AboutPage from './pages/about';
+import ProductsPage from './pages/products';
+import FarmersPage from './pages/farmers';
+import AuthLayout from './layouts/auth';
+import SignUpPage from './pages/auth/signup';
+import LoginPage from './pages/auth/login';
+import ForgotPassworPage from './pages/auth/forgot-password';
+import ResetPasswordPage from './pages/auth/reset-password';
+import ProtectedRoute from './ProtectedRoute';
+import VegetablesPage from './views/products/vegetables';
+import FruitsPage from './views/products/fruits';
+import GrainsPage from './views/products/grain';
+import DairyPage from './views/products/dairy';
+import ProfilePage from './pages/profile';
+import LikedPageView from './views/liked-products';
 
 const Router = () => {
   const routes = useRoutes([
     {
-      path: "/",
+      path: '/',
       element: <LandingLayout />,
       children: [
         {
@@ -29,71 +29,76 @@ const Router = () => {
           element: <HomePage />,
         },
         {
-          path: "about",
+          path: 'about',
           element: <AboutPage />,
         },
         {
-          path: "products",
+          path: 'products',
           element: <ProductsPage />,
           children: [
             {
-              path: "vegetables",
+              path: 'vegetables',
               element: <VegetablesPage />,
             },
             {
-              path: "fruits",
+              path: 'fruits',
               element: <FruitsPage />,
             },
             {
-              path: "grains",
+              path: 'grains',
               element: <GrainsPage />,
             },
             {
-              path: "dairy",
+              path: 'dairy',
               element: <DairyPage />,
             },
           ],
         },
         {
-          path: "farmers",
+          path: 'farmers',
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="farmer">
               <FarmersPage />
             </ProtectedRoute>
           ),
         },
         {
-          path: "profile",
+          path: 'liked-products',
+          element: (
+            <ProtectedRoute requiredRole="buyer">
+              <LikedPageView />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'profile',
           element: <ProfilePage />,
         },
+
         {
-          path: "liked-products",
-          element: <LikedPageView />,
-        },
-        {
-          path: "*",
+          path: '*',
           element: <NotFoundPage />,
         },
       ],
     },
     {
-      path: "/auth",
+      path: '/auth',
       element: <AuthLayout />,
       children: [
         {
-          path: "signup",
+          path: 'signup',
           element: <SignUpPage />,
         },
         {
-          path: "login",
+          path: 'login',
           element: <LoginPage />,
         },
         {
-          path: "forgot-password",
+          path: 'forgot-password',
           element: <ForgotPassworPage />,
         },
         {
-          path: "reset-password/:token",
+          path: 'reset-password/:token',
           element: <ResetPasswordPage />,
         },
       ],

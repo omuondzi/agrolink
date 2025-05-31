@@ -78,8 +78,8 @@ const LoginPageView = () => {
     if (role === "farmer") {
       navigate("/farmers");
     } else if (role === "buyer") {
-      navigate("/"); 
-      handleLogout(); // Logout if not a farmer
+      navigate("/liked-products"); 
+      // handleLogout(); // Logout if not a farmer
     } else {
       navigate("/");
       handleLogout();

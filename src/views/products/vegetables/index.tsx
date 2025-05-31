@@ -3,15 +3,38 @@ import { Subtitle, Subtitle2 } from "../../../components/typography";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Link } from "react-router-dom";
 import { useProducts } from "../context/ProductsContext";
+import { useState } from "react";
+import { enqueueSnackbar } from "notistack";
+import { handleErrors } from "../../../libs/handle-errors";
+import { authAxios } from "../../../serverUrl";
 
 
 const VegetablesPage = () => {
   const { products } = useProducts(); // ✅ Get all products from context
-
+  const [like, setLike] = useState<{ [productId: number]: boolean }>({});
   console.log("Vegetables products:", products);
   const vegetableProducts = products.filter(
     (product) => product.category?.toLowerCase() === "vegetables"
   );
+
+      const handleLike = async (id: number) => {
+        try {
+          const response = await authAxios.patch(`/products/${id}/like/`);
+    
+          setLike((prev) => ({
+            ...prev,
+            [id]: response.data.liked, // true or false from backend
+          }));
+    
+          if (response.data.liked) {
+            enqueueSnackbar('Added to likes', { variant: 'success' });
+          } else {
+            enqueueSnackbar('Removed from likes', { variant: 'error' });
+          }
+        } catch (error) {
+          handleErrors(error);
+        }
+      };
 
   return (
     <section>
@@ -34,6 +57,23 @@ const VegetablesPage = () => {
                     <Icon icon="material-symbols:star-rounded" color="#fcce10" />
                     {product.rating}
                   </Subtitle2>
+
+                   <Button
+                    onClick={() => handleLike(product.id)}
+                    isIconOnly
+                    className="bg-transparent"
+                  >
+                    <Icon
+                      icon={
+                        like[product.id]
+                          ? 'flat-color-icons:like'
+                          : 'icon-park-outline:like'
+                      }
+                      color={like[product.id] ? 'red' : 'black'}
+                      fontSize="30"
+                    />
+                  </Button>
+
                   <Button
                     radius="none"
                     size="sm"

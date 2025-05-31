@@ -14,7 +14,21 @@ import clsx from "clsx";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { NAV_ITEMS } from "./config";
+import {jwtDecode} from "jwt-decode";
+import { enqueueSnackbar } from "notistack";
 
+// eslint-disable-next-line react-refresh/only-export-components
+export function isTokenValid(token: string | null): boolean {
+  if (!token) return false;
+  try {
+    const decoded: { exp: number } = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp > now;
+  } catch (e) {
+    console.error("Invalid token:", e);
+    return false;
+  }
+}
 const NavItemsWrapper = () => {
   return (
     <section className="flex lg:gap-[1.3rem] xl:gap-[2.3rem]">
@@ -64,12 +78,16 @@ const LandingNavbar = () => {
     localStorage.removeItem("refreshToken");
     setIsAuthenticated(false);
     window.location.href = "/";
+    enqueueSnackbar('Successfully Logged Out.', { variant: 'success' });
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     // setIsAuthenticated(!!token);
     setIsAuthenticated(token !== null);
+
+    setIsAuthenticated(isTokenValid(token));
+
   }, [shouldShowSidebar]); // Recheck when sidebar opens/closes
 
   return (

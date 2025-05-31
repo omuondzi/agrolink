@@ -14,7 +14,7 @@ import clsx from "clsx";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { NAV_ITEMS } from "./config";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { enqueueSnackbar } from "notistack";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -78,7 +78,7 @@ const LandingNavbar = () => {
     localStorage.removeItem("refreshToken");
     setIsAuthenticated(false);
     window.location.href = "/";
-    enqueueSnackbar('Successfully Logged Out.', { variant: 'success' });
+    enqueueSnackbar("Successfully Logged Out.", { variant: "success" });
   };
 
   useEffect(() => {
@@ -87,7 +87,6 @@ const LandingNavbar = () => {
     setIsAuthenticated(token !== null);
 
     setIsAuthenticated(isTokenValid(token));
-
   }, [shouldShowSidebar]); // Recheck when sidebar opens/closes
 
   return (
@@ -126,11 +125,13 @@ const LandingNavbar = () => {
             fontSize={30}
             className="text-gray-400"
           />
-          <Icon
-            icon="mdi:heart-outline"
-            fontSize={30}
-            className="text-gray-400"
-          />
+          <Link to="/liked-products">
+            <Icon
+              icon="mdi:heart-outline"
+              fontSize={30}
+              className="text-gray-400"
+            />
+          </Link>
           <Icon
             icon="hugeicons:message-multiple-02"
             fontSize={30}

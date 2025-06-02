@@ -15,7 +15,6 @@ import { Input, Button, Link, Tabs, Tab } from "@heroui/react";
 import { Subtitle2 } from "../../components/typography";
 import { authAxios } from "../../serverUrl";
 
-
 const SignupPageView = () => {
   const navigate = useNavigate();
 
@@ -41,18 +40,18 @@ const SignupPageView = () => {
       phone_number: methods.getValues("phone"),
       email: methods.getValues("email"),
       password: methods.getValues("password"),
-
     };
 
     try {
-      const response = await authAxios.post('/user/signup/', registrationData);
-      console.log('Signup response:', response.data);
+      const response = await authAxios.post("/user/signup/", registrationData);
+      console.log("Signup response:", response.data);
 
       enqueueSnackbar("Welcome on board!", { variant: "success" });
 
       navigate("/auth/login");
     } catch (error) {
       console.error("Signup error:", error);
+
       // handleErrors(error);
       enqueueSnackbar("Signup failed. Please try again.", { variant: "error" });
     }

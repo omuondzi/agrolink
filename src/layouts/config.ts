@@ -13,11 +13,19 @@ export const NAV_ITEMS: NAV_ITEM[] = [
   },
   {
     label: "Products",
-    path: "/products/vegetables",
+    path: "/products",
+  },
+  {
+    label: "Liked Products",
+    path: "/liked-products",
   },
   {
     label: "Farmers",
     path: "farmers",
+  },
+  {
+    label: "Feedback",
+    path: "/contact-us",
   },
 
   // { label: "Messages", path: "messages" },
@@ -40,7 +48,11 @@ export const FOOTERLINKS: FooterLink[] = [
 
   {
     label: "Products",
-    path: "/products/vegetables",
+    path: "/products",
+  },
+  {
+    label: "Liked Products",
+    path: "/liked-products",
   },
   {
     label: "Farmers",

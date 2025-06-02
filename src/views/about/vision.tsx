@@ -36,7 +36,7 @@ const VisionAndMission = () => {
 
   return (
     <section className="bg-lightbg py-[1rem]">
-      <section className="container mx-auto flex items-center gap-[3rem]">
+      <section className="container mx-auto flex flex-col md:flex-row items-center gap-[3rem]">
         <div>
           <SvgLetterImage imageUrl="/images/tea.jpg" letter="A" />
         </div>

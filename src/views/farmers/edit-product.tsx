@@ -50,42 +50,41 @@ const EditProductModal = ({
   const [loading, setLoading] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-const fetchProduct = useCallback(async () => {
-  try {
-    setLoading(true);
-    const response = await authAxios.get(`/products/${productId}/`);
-    setProduct(response.data);
-    setFormData({
-      name: response.data.name,
-      description: response.data.description,
-      price: response.data.price,
-      category: response.data.category,
-      stock: response.data.stock,
-      image: response.data.image || "",
-    });
-  } catch (error) {
-    handleErrors(error);
-  } finally {
-    setLoading(false);
-  }
-}, [productId]);
+  const fetchProduct = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await authAxios.get(`/products/${productId}/`);
+      setProduct(response.data);
+      setFormData({
+        name: response.data.name,
+        description: response.data.description,
+        price: response.data.price,
+        category: response.data.category,
+        stock: response.data.stock,
+        image: response.data.image || "",
+      });
+    } catch (error) {
+      handleErrors(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [productId]);
 
-useEffect(() => {
-  if (isOpen && productId) {
-    fetchProduct();
-  } else {
-    setProduct(null);
-    setFormData({
-      name: "",
-      description: "",
-      price: 0,
-      category: "",
-      stock: 0,
-      image: "",
-    });
-  }
-}, [fetchProduct, isOpen, productId]);
-
+  useEffect(() => {
+    if (isOpen && productId) {
+      fetchProduct();
+    } else {
+      setProduct(null);
+      setFormData({
+        name: "",
+        description: "",
+        price: 0,
+        category: "",
+        stock: 0,
+        image: "",
+      });
+    }
+  }, [fetchProduct, isOpen, productId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -116,7 +115,12 @@ useEffect(() => {
 
   return (
     <section>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="lg">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        radius="lg"
+        scrollBehavior="inside"
+      >
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalBody>
@@ -155,7 +159,7 @@ useEffect(() => {
                   placeholder="Category"
                   className="mb-4"
                 />
-                <Input
+                {/* <Input
                   name="stock"
                   type="number"
                   value={formData.stock.toString()}
@@ -163,7 +167,7 @@ useEffect(() => {
                   placeholder="Stock"
                   className="mb-4"
                   min={0}
-                />
+                /> */}
                 {formData.image ? (
                   <img
                     src={formData.image}

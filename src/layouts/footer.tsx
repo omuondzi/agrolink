@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 const LandingFooter = () => {
   return (
-    <footer className=" border-t-3 bg-primary">
+    <footer className=" border-t-1 border-t-primary-200 bg-primary">
       <section className="container py-6 grid grid-cols-2 gap-4  lg:flex justify-between">
         <div className="col-span-2">
           <p className=" text-4xl font-bold text-primary-50 cursor-pointer">

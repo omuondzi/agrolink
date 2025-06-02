@@ -1,15 +1,15 @@
-import { Button, Image, useDisclosure } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import AddProductModal from './product-modal';
-import DeleteProductModal from './delete-product-modal';
-import EditProductModal from './edit-product';
+import { Button, Image, useDisclosure } from "@heroui/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import AddProductModal from "./product-modal";
+import DeleteProductModal from "./delete-product-modal";
+import EditProductModal from "./edit-product";
 
-import { useEffect, useState } from 'react';
-import { Subtitle, Subtitle2 } from '../../components/typography';
-import { useNavigate } from 'react-router-dom';
-import { authAxios } from '../../serverUrl';
+import { useEffect, useState } from "react";
+import { Subtitle, Subtitle2 } from "../../components/typography";
+import { useNavigate } from "react-router-dom";
+import { authAxios } from "../../serverUrl";
 
-import { enqueueSnackbar } from 'notistack';
+import { enqueueSnackbar } from "notistack";
 // import { handleErrors } from '../../libs/handle-errors';
 
 export type FarmerProduct = {
@@ -46,57 +46,50 @@ const FarmersPageView = () => {
   const [_isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     // setIsAuthenticated(!!token);
     setIsAuthenticated(token !== null);
   }, []);
 
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(token !== null);
+    const userJson = localStorage.getItem("user");
+    const user = userJson ? JSON.parse(userJson) : null;
 
-useEffect(() => {
-  const token = localStorage.getItem('token');
-  setIsAuthenticated(token !== null);
-  const userJson = localStorage.getItem('user');
-  const user = userJson ? JSON.parse(userJson) : null;
+    if (!user || user.role !== "farmer") {
+      enqueueSnackbar("Only farmers can access this page.", {
+        variant: "error",
+      });
+      navigate("/");
+      return;
+    }
 
-  if (!user || user.role !== 'farmer') {
-    enqueueSnackbar('Only farmers can access this page.', { variant: 'error' });
-    navigate('/');
-    return;
-  }
-
-  handleFarmerProducts();
-}, [navigate]);
-
-
- 
-
+    handleFarmerProducts();
+  }, [navigate]);
 
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
 
-
-
-
-
-
   const handleFarmerProducts = async () => {
-  try {
-    const response = await authAxios.get('products/my-products/');
-    setFarmerProducts(response.data);
+    try {
+      const response = await authAxios.get("products/my-products/");
+      setFarmerProducts(response.data);
 
-    const likeMap = Object.fromEntries(
-      response.data.map((product: FarmerProduct) => [product.id, product.liked])
-    );
-    setLike(likeMap); // <- persists the state on reload
-  } catch (error) {
-    console.error('Error fetching farmer products:', error);
-  }
-};
-
-
+      const likeMap = Object.fromEntries(
+        response.data.map((product: FarmerProduct) => [
+          product.id,
+          product.liked,
+        ])
+      );
+      setLike(likeMap); // <- persists the state on reload
+    } catch (error) {
+      console.error("Error fetching farmer products:", error);
+    }
+  };
 
   const handleProductDeleted = (deletedId: number) => {
     setFarmerProducts((prevProducts) =>
@@ -113,11 +106,11 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
 
-    if (!user || user.role !== 'farmer') {
-      navigate('/');
+    if (!user || user.role !== "farmer") {
+      navigate("/");
       return;
     }
 
@@ -160,11 +153,22 @@ useEffect(() => {
           />
         </div>
 
-        <section className="grid md:grid-cols-3 gap-2 gap-y-4 py-3">
+        <section className="min-h-[80vh] grid md:grid-cols-3 gap-5 gap-y-4 py-3">
+          {farmerProducts.length == 0 && (
+            <div className="h-[100%] flex flex-col justify-center items-center mx-auto col-span-3">
+              <h4>No products added.</h4>
+              <h4>Please post and come back.</h4>
+            </div>
+          )}
           {farmerProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg pb-4">
+            <div
+              key={product.id}
+              className="bg-white rounded-lg pb-4 shadow-md"
+            >
               <Image
                 src={product.image}
+                height={200}
+                width={400}
                 radius="none"
                 className="w-full rounded-t-xl"
               />
@@ -199,39 +203,37 @@ useEffect(() => {
                       fontSize="30"
                     />
                   </Button> */}
-
-                  <Button
-                    radius="none"
-                    isIconOnly
-                    size="sm"
-                    className="bg-none text-blue-600 border-none"
-                    variant="ghost"
-                    onPress={() => {
-                      setSelectedProductId(product.id);
-                      onEditOpen();
-                    }}
-                  >
-                    <Icon
-                      icon="material-symbols:edit-outline-rounded"
-                      fontSize={20}
-                    />
-                  </Button>
-                  <Button
-                    radius="none"
-                    isIconOnly
-                    size="sm"
-                    className="bg-none text-red-600 border-none"
-                    variant="ghost"
-                    onPress={() => {
-                      setSelectedProductId(product.id);
-                      onDeleteOpen();
-                    }}
-                  >
-                    <Icon
-                      icon="material-symbols:delete-outline"
-                      fontSize={20}
-                    />
-                  </Button>
+                  <div className="flex justify-end gap-2 w-[100%]">
+                    <Button
+                      radius="none"
+                      isIconOnly
+                      size="sm"
+                      className="bg-none text-blue-600 border-none"
+                      variant="ghost"
+                      onPress={() => {
+                        setSelectedProductId(product.id);
+                        onEditOpen();
+                      }}
+                    >
+                      <Icon icon="fluent-mdl2:edit" fontSize={20} />
+                    </Button>
+                    <Button
+                      radius="none"
+                      isIconOnly
+                      size="sm"
+                      className="bg-none text-red-600 border-none"
+                      variant="ghost"
+                      onPress={() => {
+                        setSelectedProductId(product.id);
+                        onDeleteOpen();
+                      }}
+                    >
+                      <Icon
+                        icon="material-symbols-light:delete-outline"
+                        fontSize={28}
+                      />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

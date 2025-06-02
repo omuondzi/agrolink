@@ -1,47 +1,51 @@
-import { Link, Outlet } from 'react-router-dom';
-import { Subtitle } from '../../components/typography';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { Divider } from '@heroui/react';
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
+import { Link, Outlet } from "react-router-dom";
+import { Subtitle } from "../../components/typography";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { Divider } from "@heroui/react";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 
-import { useProducts } from './context/ProductsContext';
-import { publicAxios } from '../../serverUrl';
+import { useProducts } from "./context/ProductsContext";
+import { publicAxios } from "../../serverUrl";
 const SIDEBAR_ITEMS = [
   {
-    label: 'Vegetables',
-    path: 'vegetables',
-    icon: 'emojione-monotone:carrot',
+    label: "All Products",
+    path: "/products",
+    icon: "gridicons:product",
   },
   {
-    label: 'Fruits',
-    path: 'fruits',
-    icon: 'tabler:apple-filled',
+    label: "Vegetables",
+    path: "vegetables",
+    icon: "emojione-monotone:carrot",
   },
   {
-    label: 'Dairy',
-    path: 'dairy',
-    icon: 'material-symbols:egg',
+    label: "Fruits",
+    path: "fruits",
+    icon: "tabler:apple-filled",
   },
   {
-    label: 'Grains',
-    path: 'grains',
-    icon: 'game-icons:grain',
+    label: "Dairy",
+    path: "dairy",
+    icon: "material-symbols:egg",
+  },
+  {
+    label: "Grains",
+    path: "grains",
+    icon: "game-icons:grain",
   },
 ];
 
 const ProductsPageView = () => {
   const [isFixed, setIsFixed] = useState(false);
-  
 
-const { setProducts } = useProducts();
+  const { setProducts } = useProducts();
   const handleProducts = async () => {
     try {
-      const response = await publicAxios.get('/products/all-products/');
+      const response = await publicAxios.get("/products/all-products/");
       setProducts(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -56,8 +60,8 @@ const { setProducts } = useProducts();
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -65,15 +69,15 @@ const { setProducts } = useProducts();
       <section className="grid grid-cols-[20%,80%]">
         <section
           className={clsx(
-            'min-h-screen border-r-2  bg-primary relative ',
-            isFixed && 'fixed z-9'
+            "min-h-screen border-r-2  bg-primary relative ",
+            isFixed && "fixed z-9"
           )}
         >
           <div className="fixed">
             <Subtitle className="text-white py-[1rem]">Categories</Subtitle>
             <Divider className="w-[100%]" />
             <div className="flex flex-col gap-3 p-[1rem]">
-              {' '}
+              {" "}
               {SIDEBAR_ITEMS.map((item, index) => (
                 <Link
                   key={index}

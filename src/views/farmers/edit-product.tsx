@@ -155,7 +155,7 @@ useEffect(() => {
                   placeholder="Category"
                   className="mb-4"
                 />
-                <Input
+                {/* <Input
                   name="stock"
                   type="number"
                   value={formData.stock.toString()}
@@ -163,7 +163,7 @@ useEffect(() => {
                   placeholder="Stock"
                   className="mb-4"
                   min={0}
-                />
+                /> */}
                 {formData.image ? (
                   <img
                     src={formData.image}

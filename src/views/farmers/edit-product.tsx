@@ -275,19 +275,10 @@ const EditProductModal = ({
                   errorMessage={errors.category}
                 >
                   {animals.map((animal) => (
-                    <SelectItem key={animal.key} value={animal.key}>{animal.label}</SelectItem>
+                    <SelectItem value={animal.key}>{animal.label}</SelectItem>
                   ))}
                 </Select>
-                <Input
-                  name="stock"
-                  type="number"
-                  value={formData.stock.toString()}
-                  onChange={handleInputChange}
-                  placeholder="Stock"
-                  className="mb-4"
-                  min={0}
-                  step={1}
-                />
+          
 
                 {/* Image Upload Section */}
                 <div className="mb-3">

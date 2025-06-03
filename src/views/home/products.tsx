@@ -23,27 +23,21 @@ interface PRODUCT {
   tel: string;
 }
 
-
 const FeaturedProducts = () => {
-
   useEffect(() => {
-  handleFeaturedProducts();
-}, []);
+    handleFeaturedProducts();
+  }, []);
 
-const [featuredProducts, setFeaturedProducts] = useState<PRODUCT[]>([]);
-const handleFeaturedProducts = async () => {
-  try{
-    const response = await publicAxios.get("/products/featured/");
-  setFeaturedProducts(response.data);
-  console.log("Featured Products:", response.data);
-  }
-  catch(error){
-    console.error("Error fetching featured products:", error);
-  }
-
-}
-
-
+  const [featuredProducts, setFeaturedProducts] = useState<PRODUCT[]>([]);
+  const handleFeaturedProducts = async () => {
+    try {
+      const response = await publicAxios.get("/products/featured/");
+      setFeaturedProducts(response.data);
+      console.log("Featured Products:", response.data);
+    } catch (error) {
+      console.error("Error fetching featured products:", error);
+    }
+  };
 
   return (
     <section className="bg-lightbg py-[3rem]">
@@ -55,6 +49,8 @@ const handleFeaturedProducts = async () => {
               <Image
                 src={product.image}
                 radius="none"
+                height={200}
+                width={340}
                 className="w-full rounded-t-xl"
               />
               <div className="w-[90%] mx-auto">

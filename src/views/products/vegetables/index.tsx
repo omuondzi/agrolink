@@ -61,9 +61,11 @@ const VegetablesPage = () => {
       <div>
         <section className="container grid md:grid-cols-3 gap-2 gap-y-4 py-3">
           {vegetableProducts.map((product, index) => (
-            <div key={index} className="bg-white rounded-lg pb-4">
+            <div key={index} className="bg-white rounded-lg pb-4 shadow-md">
               <Image
                 src={product.image}
+                height={200}
+                width={320}
                 radius="none"
                 className="w-full rounded-t-xl"
               />
@@ -77,7 +79,10 @@ const VegetablesPage = () => {
                 </Subtitle2>
                 <div className="flex justify-between items-center py-4">
                   <Subtitle2 className="flex items-center gap-1 pt-3">
-                    <Icon icon="material-symbols:star-rounded" color="#fcce10" />
+                    <Icon
+                      icon="material-symbols:star-rounded"
+                      color="#fcce10"
+                    />
                     {product.rating}
                   </Subtitle2>
 

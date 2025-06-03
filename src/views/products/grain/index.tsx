@@ -57,10 +57,12 @@ const GrainsPage = () => {
       <div>
         <section className="container grid md:grid-cols-3 gap-2 gap-y-4 py-3">
           {grainProducts.map((product, index) => (
-            <div key={index} className="bg-white rounded-lg pb-4">
+            <div key={index} className="bg-white rounded-lg pb-4 shadow-md">
               <Image
                 src={product.image}
                 radius="none"
+                height={200}
+                width={320}
                 className="w-full rounded-t-xl"
               />
               <div className="w-[90%] mx-auto">
@@ -68,10 +70,15 @@ const GrainsPage = () => {
                   <Subtitle2>{product.name}</Subtitle2>
                   <Subtitle2>KSH {product.price}/Kg</Subtitle2>
                 </div>
-                <Subtitle2 className="text-graytext">{product.description}</Subtitle2>
+                <Subtitle2 className="text-graytext">
+                  {product.description}
+                </Subtitle2>
                 <div className="flex justify-between items-center py-4">
                   <Subtitle2 className="flex items-center gap-1 pt-3">
-                    <Icon icon="material-symbols:star-rounded" color="#fcce10" />
+                    <Icon
+                      icon="material-symbols:star-rounded"
+                      color="#fcce10"
+                    />
                     {product.rating}
                   </Subtitle2>
 

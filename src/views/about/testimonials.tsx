@@ -19,31 +19,31 @@ interface TESTIMONY {
 
 const TESTIMONIALS: TESTIMONY[] = [
   {
-    name: "John Doe",
+    name: "John Oloo",
     title: "Smale scale Farmer, Nairobi.",
     description:
       "“Before Agrolink, I struggled to find consistent buyers for my produce. Now, I upload what I have, and buyers contact me directly. It’s easy to use, and I’ve doubled my income in just three months.”",
   },
   {
-    name: "John Doe",
+    name: "Yonah Obwoge",
     title: "Restaurant Owner, Nairobi.",
     description:
       "“As a restaurant owner, I need fresh produce daily. Agrolink connects me to local farmers with quality goods and fair prices. It has transformed the way I source ingredients.”",
   },
   {
-    name: "John Doe",
+    name: "Joe Kessler",
     title: "Agricultural Policy Advisor, UNDP.",
     description:
       "“Agrolink is bridging the gap between rural farmers and urban markets. It's a powerful example of how digital innovation can promote food security and inclusive trade.”",
   },
   {
-    name: "John Doe",
+    name: "Kulubi Weps",
     title: "Smale scale Farmer, Nairobi.",
     description:
       "“Thanks to Agrolink, I no longer have to rely on local middlemen who used to underpay us. I now set my own prices and deal directly with buyers. It feels empowering to finally have control over my own harvest.”",
   },
   {
-    name: "John Doe",
+    name: "Omond Timon",
     title: "Smale scale Farmer, Nairobi.",
     description:
       "“Thanks to Agrolink, I no longer have to rely on local middlemen who used to underpay us. I now set my own prices and deal directly with buyers. It feels empowering to finally have control over my own harvest.”",

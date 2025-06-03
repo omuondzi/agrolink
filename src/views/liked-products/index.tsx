@@ -1,13 +1,13 @@
-import { Button, Image } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { Button, Image } from "@heroui/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
-import { useEffect, useState } from 'react';
-import { Subtitle, Subtitle2 } from '../../components/typography';
-import { useNavigate } from 'react-router-dom';
-import { authAxios } from '../../serverUrl';
+import { useEffect, useState } from "react";
+import { Subtitle, Subtitle2 } from "../../components/typography";
+import { useNavigate } from "react-router-dom";
+import { authAxios } from "../../serverUrl";
 
-import { enqueueSnackbar } from 'notistack';
-import { handleErrors } from '../../libs/handle-errors';
+import { enqueueSnackbar } from "notistack";
+import { handleErrors } from "../../libs/handle-errors";
 
 export type FarmerProduct = {
   id: number;
@@ -39,9 +39,9 @@ const LikedPageView = () => {
       }));
 
       if (isLiked) {
-        enqueueSnackbar('Added to likes', { variant: 'success' });
+        enqueueSnackbar("Added to likes", { variant: "success" });
       } else {
-        enqueueSnackbar('Removed from likes', { variant: 'error' });
+        enqueueSnackbar("Removed from likes", { variant: "error" });
 
         // Remove product from likedProducts to update UI immediately
         setLikedProducts((prev) => prev.filter((product) => product.id !== id));
@@ -53,7 +53,7 @@ const LikedPageView = () => {
 
   const fetchLikedProducts = async () => {
     try {
-      const response = await authAxios.get('/products/liked/');
+      const response = await authAxios.get("/products/liked/");
       setLikedProducts(response.data);
 
       // Build like map for UI state
@@ -65,18 +65,18 @@ const LikedPageView = () => {
       );
       setLike(likeMap);
     } catch (error) {
-      console.error('Error fetching liked products:', error);
+      console.error("Error fetching liked products:", error);
     }
   };
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userJson = localStorage.getItem('user');
+    const token = localStorage.getItem("token");
+    const userJson = localStorage.getItem("user");
     const user = userJson ? JSON.parse(userJson) : null;
-    console.log('User:', user);
-    if (!token || !user || user.role !== 'buyer') {
-      navigate('/'); // Redirect to home or login
-      enqueueSnackbar('You should be a buyer to access this page.', {
-        variant: 'error',
+    console.log("User:", user);
+    if (!token || !user || user.role !== "buyer") {
+      navigate("/"); // Redirect to home or login
+      enqueueSnackbar("You should be a buyer to access this page.", {
+        variant: "error",
       });
       return;
     }
@@ -88,7 +88,13 @@ const LikedPageView = () => {
   return (
     <section className="">
       <div className="container">
-        <section className="grid md:grid-cols-3 gap-2 gap-y-4 py-3">
+        <section className="min-h-[80vh] grid md:grid-cols-3 gap-2 gap-y-4 py-3">
+          {likedProducts.length == 0 && (
+            <div className="h-[100%] flex flex-col justify-center items-center mx-auto col-span-3">
+              <h4>No products liked.</h4>
+              <h4>Please like and come back.</h4>
+            </div>
+          )}
           {likedProducts.map((product) => (
             <div key={product.id} className="bg-white rounded-lg pb-4">
               <Image
@@ -120,10 +126,10 @@ const LikedPageView = () => {
                     <Icon
                       icon={
                         like[product.id]
-                          ? 'flat-color-icons:like'
-                          : 'icon-park-outline:like'
+                          ? "flat-color-icons:like"
+                          : "icon-park-outline:like"
                       }
-                      color={like[product.id] ? 'red' : 'black'}
+                      color={like[product.id] ? "red" : "black"}
                       fontSize="30"
                     />
                   </Button>

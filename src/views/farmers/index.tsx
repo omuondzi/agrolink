@@ -1,15 +1,16 @@
-import { Button, Image, useDisclosure } from '@heroui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import AddProductModal, { Product } from './product-modal';
-import DeleteProductModal from './delete-product-modal';
-import EditProductModal from './edit-product';
+import { Button, Image, useDisclosure } from "@heroui/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import AddProductModal, { Product } from "./product-modal";
+import DeleteProductModal from "./delete-product-modal";
+import EditProductModal from "./edit-product";
 
-import { useEffect, useState } from 'react';
-import { Subtitle, Subtitle2 } from '../../components/typography';
-import { useNavigate } from 'react-router-dom';
-import { authAxios } from '../../serverUrl';
+import { useEffect, useState } from "react";
+import { Subtitle, Subtitle2 } from "../../components/typography";
+import { useNavigate } from "react-router-dom";
+import { authAxios } from "../../serverUrl";
 
-import { enqueueSnackbar } from 'notistack';
+import { enqueueSnackbar } from "notistack";
+// import { handleErrors } from '../../libs/handle-errors';
 
 export type FarmerProduct = {
   id: number;
@@ -141,11 +142,22 @@ const FarmersPageView = () => {
           />
         </div>
 
-        <section className="grid md:grid-cols-3 gap-2 gap-y-4 py-3">
+        <section className="min-h-[80vh] grid md:grid-cols-3 gap-5 gap-y-4 py-3">
+          {farmerProducts.length == 0 && (
+            <div className="h-[100%] flex flex-col justify-center items-center mx-auto col-span-3">
+              <h4>No products added.</h4>
+              <h4>Please post and come back.</h4>
+            </div>
+          )}
           {farmerProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg pb-4">
+            <div
+              key={product.id}
+              className="bg-white rounded-lg pb-4 shadow-md"
+            >
               <Image
                 src={product.image}
+                height={200}
+                width={400}
                 radius="none"
                 className="w-full rounded-t-xl"
               />
@@ -156,32 +168,59 @@ const FarmersPageView = () => {
                 </div>
                 <Subtitle2 className="text-graytext">{product.description}</Subtitle2>
                 <div className="flex justify-around items-center py-4">
-                  <Button
-                    radius="none"
+                  {/* <Subtitle2 className="flex items-center gap-1 pt-3">
+                    <Icon
+                      icon="material-symbols:star-rounded"
+                      color="#fcce10"
+                    />
+                    {product.rating}
+                  </Subtitle2> */}
+                  {/* <Button
+                    onClick={() => handleLike(product.id)}
                     isIconOnly
-                    size="sm"
-                    className="bg-none text-blue-600 border-none"
-                    variant="ghost"
-                    onPress={() => {
-                      setSelectedProductId(product.id);
-                      onEditOpen();
-                    }}
+                    className="bg-transparent"
                   >
-                    <Icon icon="material-symbols:edit-outline-rounded" fontSize={20} />
-                  </Button>
-                  <Button
-                    radius="none"
-                    isIconOnly
-                    size="sm"
-                    className="bg-none text-red-600 border-none"
-                    variant="ghost"
-                    onPress={() => {
-                      setSelectedProductId(product.id);
-                      onDeleteOpen();
-                    }}
-                  >
-                    <Icon icon="material-symbols:delete-outline" fontSize={20} />
-                  </Button>
+                    <Icon
+                      icon={
+                        like[product.id]
+                          ? 'flat-color-icons:like'
+                          : 'icon-park-outline:like'
+                      }
+                      color={like[product.id] ? 'red' : 'black'}
+                      fontSize="30"
+                    />
+                  </Button> */}
+                  <div className="flex justify-end gap-2 w-[100%]">
+                    <Button
+                      radius="none"
+                      isIconOnly
+                      size="sm"
+                      className="bg-none text-blue-600 border-none"
+                      variant="ghost"
+                      onPress={() => {
+                        setSelectedProductId(product.id);
+                        onEditOpen();
+                      }}
+                    >
+                      <Icon icon="fluent-mdl2:edit" fontSize={20} />
+                    </Button>
+                    <Button
+                      radius="none"
+                      isIconOnly
+                      size="sm"
+                      className="bg-none text-red-600 border-none"
+                      variant="ghost"
+                      onPress={() => {
+                        setSelectedProductId(product.id);
+                        onDeleteOpen();
+                      }}
+                    >
+                      <Icon
+                        icon="material-symbols-light:delete-outline"
+                        fontSize={28}
+                      />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

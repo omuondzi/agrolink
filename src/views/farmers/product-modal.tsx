@@ -189,7 +189,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
                   errorMessage={errors.category}
                 >
                   {animals.map((animal) => (
-                    <SelectItem key={animal.key} value={animal.key}>
+                    <SelectItem key={animal.key}>
                       {animal.label}
                     </SelectItem>
                   ))}

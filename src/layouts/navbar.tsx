@@ -7,7 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
+  // Input,
 } from "@heroui/react";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
@@ -96,8 +96,8 @@ const LandingNavbar = () => {
         isFixed && "fixed top-0 z-50 w-[100%] transition-all duration-1000"
       )}
     >
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-[1rem] lg:gap-[6rem] w-[90%] mx-auto">
-        <section className="flex gap-[9rem] lg:gap-[2rem]">
+      <section className="flex flex-col lg:flex-row items-center lg:justify-between gap-[1rem] lg:gap-[6rem] w-[90%] mx-auto">
+        <section className="w-[100%] flex gap-[1rem]">
           <div className="text-2xl font-bold text-primary cursor-pointer">
             Agrolink
           </div>
@@ -113,33 +113,33 @@ const LandingNavbar = () => {
           </div>
         </section>
 
-        <section className="w-full mx-auto flex gap-3 items-center">
-          <Input
+        <section className="">
+          {/* <Input
             startContent={<Icon icon="material-symbols:search" />}
             radius="none"
             variant="bordered"
             placeholder="Search products or farms.."
-          />
-          <Icon
+          /> */}
+          {/* <Icon
             icon="mdi:bell-outline"
             fontSize={30}
             className="text-gray-400"
-          />
-          <Link to="/liked-products">
+          /> */}
+          {/* <Link to="/liked-products">
             <Icon
               icon="mdi:heart-outline"
               fontSize={30}
               className="text-gray-400"
             />
-          </Link>
-          <Icon
+          </Link> */}
+          {/* <Icon
             icon="hugeicons:message-multiple-02"
             fontSize={30}
             className="text-gray-400"
-          />
+          /> */}
 
           {isAuthenticated ? (
-            <Dropdown>
+            <Dropdown className="self-end">
               <DropdownTrigger>
                 <Button
                   variant="solid"

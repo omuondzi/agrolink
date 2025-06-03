@@ -74,16 +74,13 @@ const DairyPage = () => {
                   {product.description}
                 </Subtitle2>
                 <div className="flex justify-between items-center py-4">
-<<<<<<< HEAD
                   {/* <Subtitle2 className="flex items-center gap-1 pt-3">
                     <Icon icon="material-symbols:star-rounded" color="#fcce10" />
-=======
                   <Subtitle2 className="flex items-center gap-1 pt-3">
                     <Icon
                       icon="material-symbols:star-rounded"
                       color="#fcce10"
                     />
->>>>>>> c7a69ca8f6515b7b9edd94bfb91295cc037df48e
                     {product.rating}
                   </Subtitle2> */}
 

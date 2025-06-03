@@ -99,6 +99,8 @@ const LikedPageView = () => {
             <div key={product.id} className="bg-white rounded-lg pb-4">
               <Image
                 src={product.image}
+                height={200}
+                width={400}
                 radius="none"
                 className="w-full rounded-t-xl"
               />

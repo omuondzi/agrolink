@@ -21,7 +21,7 @@ export const NAV_ITEMS: NAV_ITEM[] = [
   },
   {
     label: "Farmers",
-    path: "farmers",
+    path: "/farmers",
   },
   {
     label: "Feedback",

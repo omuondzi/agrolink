@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useState, ChangeEvent } from "react";
 import { handleErrors } from "../../libs/handle-errors";
 import { authAxios } from "../../serverUrl";
 import { Product as FarmerProduct } from "./AddProductModal"; // Re-using the Product interface from AddProductModal
+import { enqueueSnackbar } from "notistack";
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -211,6 +212,8 @@ const EditProductModal = ({
       );
       console.log("Updated:", response.data);
       onOpenChange(false);
+      enqueueSnackbar("Product updated successfully", { variant: "success" });
+      
       onEditSuccess(response.data);
     } catch (error) {
       handleErrors(error);

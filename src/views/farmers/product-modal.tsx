@@ -34,10 +34,10 @@ const DefaultPostProductData: PostProductFormData = {
 
 // Category options
 export const animals = [
-  { key: 'vegetable', label: 'Vegetable' },
-  { key: 'fruit', label: 'Fruit' },
+  { key: 'vegetables', label: 'Vegetable' },
+  { key: 'fruits', label: 'Fruit' },
   { key: 'dairy', label: 'Dairy' },
-  { key: 'grain', label: 'Grain' },
+  { key: 'grains', label: 'Grain' },
 ];
 
 // Product type (as returned from API)

@@ -18,7 +18,7 @@ const HeroSection = () => {
             <div className="flex gap-[1rem]">
               <Button
                 as={Link}
-                to={"/products/vegetables"}
+                to={"/products"}
                 radius="sm"
                 className="text-white bg-black"
               >
@@ -26,7 +26,7 @@ const HeroSection = () => {
               </Button>
               <Button
                 as={Link}
-                to={"/farmers"}
+                to={"/auth/signup"}
                 radius="sm"
                 className="text-black bg-white"
               >

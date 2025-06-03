@@ -106,7 +106,7 @@ const VegetablesPage = () => {
                     size="sm"
                     className="bg-black text-white"
                     as={Link}
-                    to={`tel:${product.tel}`}
+                    to={`tel:${product.farmer.phone_number}`}
                   >
                     Buy
                   </Button>

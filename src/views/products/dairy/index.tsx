@@ -70,10 +70,10 @@ const DairyPage = () => {
                 </div>
                 <Subtitle2 className="text-graytext">{product.description}</Subtitle2>
                 <div className="flex justify-between items-center py-4">
-                  <Subtitle2 className="flex items-center gap-1 pt-3">
+                  {/* <Subtitle2 className="flex items-center gap-1 pt-3">
                     <Icon icon="material-symbols:star-rounded" color="#fcce10" />
                     {product.rating}
-                  </Subtitle2>
+                  </Subtitle2> */}
 
                   {/* Show Like button only if userRole !== 'farmer' */}
                   {userRole !== 'farmer' && (
@@ -99,7 +99,7 @@ const DairyPage = () => {
                     size="sm"
                     className="bg-black text-white"
                     as={Link}
-                    to={`tel:${product.tel}`}
+                    to={`tel:${product.farmer.phone_number}`}
                   >
                     Buy
                   </Button>

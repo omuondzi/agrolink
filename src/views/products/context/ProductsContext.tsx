@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type Product = {
+  farmer: any;
   liked: boolean;
   description: ReactNode;
   id: number;

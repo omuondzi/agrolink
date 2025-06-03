@@ -9,13 +9,13 @@ import {
   Textarea,
   Select,
   SelectItem,
-} from "@heroui/react";
+} from '@heroui/react';
 
-import React, { useCallback, useEffect, useState, ChangeEvent } from "react";
-import { handleErrors } from "../../libs/handle-errors";
-import { authAxios } from "../../serverUrl";
-import { Product as FarmerProduct } from "./AddProductModal"; // Re-using the Product interface from AddProductModal
-import { enqueueSnackbar } from "notistack";
+import React, { useCallback, useEffect, useState, ChangeEvent } from 'react';
+import { handleErrors } from '../../libs/handle-errors';
+import { authAxios } from '../../serverUrl';
+import { Product as FarmerProduct } from './AddProductModal';
+import { enqueueSnackbar } from 'notistack';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -25,9 +25,8 @@ interface ProductModalProps {
   onEditSuccess: (updatedProduct: FarmerProduct) => void;
 }
 
-// Updated ProductData interface to handle File objects for image updates
 interface ProductData {
-  image?: File | string | null; // Can be a File, a URL string, or null
+  image?: File | string | null;
   name: string;
   description: string;
   price: number;
@@ -35,14 +34,12 @@ interface ProductData {
   stock: number;
 }
 
-// Helper for category options (re-using from AddProductModal)
 export const animals = [
   { key: 'vegetables', label: 'Vegetable' },
   { key: 'fruits', label: 'Fruit' },
   { key: 'dairy', label: 'Dairy' },
   { key: 'grains', label: 'Grain' },
 ];
-
 
 const EditProductModal = ({
   isOpen,
@@ -53,15 +50,15 @@ const EditProductModal = ({
 }: ProductModalProps) => {
   const [product, setProduct] = useState<ProductData | null>(null);
   const [formData, setFormData] = useState<ProductData>({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     price: 0,
-    category: "",
+    category: '',
     stock: 0,
-    image: "", // Initial state for image, will be overwritten by fetched data
+    image: '',
   });
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Partial<Record<keyof ProductData, string>>>({}); // State for validation errors
+  const [errors, setErrors] = useState<Partial<Record<keyof ProductData, string>>>({});
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -71,12 +68,12 @@ const EditProductModal = ({
       setFormData({
         name: response.data.name,
         description: response.data.description,
-        price: parseFloat(response.data.price), // Ensure price is a number
+        price: parseFloat(response.data.price),
         category: response.data.category,
-        stock: 0, // Assuming stock is not in FarmerProduct, or needs to be fetched
-        image: response.data.image || null, // Set image to URL or null
+        stock: 0,
+        image: response.data.image || null,
       });
-      setErrors({}); // Clear errors on fresh fetch
+      setErrors({});
     } catch (error) {
       handleErrors(error);
     } finally {
@@ -88,13 +85,12 @@ const EditProductModal = ({
     if (isOpen && productId) {
       fetchProduct();
     } else {
-      // Reset form data and errors when modal closes or productId is cleared
       setProduct(null);
       setFormData({
-        name: "",
-        description: "",
+        name: '',
+        description: '',
         price: 0,
-        category: "",
+        category: '',
         stock: 0,
         image: null,
       });
@@ -108,9 +104,9 @@ const EditProductModal = ({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "price" || name === "stock" ? Number(value) : value,
+      [name]: name === 'price' || name === 'stock' ? Number(value) : value,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined })); // Clear error on change
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -119,101 +115,68 @@ const EditProductModal = ({
       ...prevData,
       image: file,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, image: undefined })); // Clear image error
+    setErrors((prevErrors) => ({ ...prevErrors, image: undefined }));
   };
 
-  // Manual validation function for EditProductModal
   const validateForm = (): boolean => {
     let isValid = true;
     const newErrors: Partial<Record<keyof ProductData, string>> = {};
 
-    // Validate name
     if (!formData.name.trim()) {
       newErrors.name = 'Please enter product name.';
       isValid = false;
     }
-
-    // Validate category
     if (!formData.category.trim()) {
       newErrors.category = 'Please choose a category.';
       isValid = false;
     }
-
-    // Validate price
     if (isNaN(formData.price) || formData.price <= 0) {
       newErrors.price = 'Please enter a valid positive price.';
       isValid = false;
     }
-
-    // Validate description
     if (!formData.description.trim()) {
       newErrors.description = 'Add a description.';
       isValid = false;
     }
 
-    // Validate image (only if a new file is selected or if it's explicitly null)
     if (formData.image instanceof File) {
       if (!formData.image.type.startsWith('image/')) {
         newErrors.image = 'Unsupported file format. Only images are allowed.';
         isValid = false;
-      } else if (formData.image.size > 5 * 1024 * 1024) { // 5 MB limit
+      } else if (formData.image.size > 5 * 1024 * 1024) {
         newErrors.image = 'Image is too large. Max 5MB.';
         isValid = false;
       }
-    } else if (formData.image === null) {
-      // If image is explicitly set to null (e.g., user clicked a "clear image" button)
-      // You might want to add a specific validation if image is required even on edit
-      // For now, if null, it means no image is set, and we allow it unless required.
     }
-
 
     setErrors(newErrors);
     return isValid;
   };
 
-
   const handleSubmit = async () => {
-    if (!validateForm()) {
-      return; // Stop if validation fails
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
     try {
       const dataToSend = new FormData();
-
-      // Append only changed fields or fields that are always sent
-      // For PATCH, only send fields that are being updated.
-      // For PUT, send all fields. Your Django view supports PATCH.
-      // So, we'll append all current form data, but handle image specifically.
-
       dataToSend.append('name', formData.name);
       dataToSend.append('description', formData.description);
       dataToSend.append('price', formData.price.toString());
       dataToSend.append('category', formData.category);
-      dataToSend.append('stock', formData.stock.toString()); // Ensure stock is sent
+      dataToSend.append('stock', formData.stock.toString());
 
-      // Handle image:
       if (formData.image instanceof File) {
-        // A new file was selected
         dataToSend.append('image', formData.image);
       } else if (formData.image === null) {
-        // Image was explicitly cleared by the user (send empty string or null to backend to clear it)
-        // Django's ImageField will clear if an empty string or False is passed.
-        // For FormData, appending an empty string is common to clear.
         dataToSend.append('image', '');
       }
-      // If formData.image is a string (original URL) and no new file selected,
-      // we do NOT append the 'image' field to FormData. This allows Django's PATCH
-      // to keep the existing image untouched.
 
-      const response = await authAxios.patch<FarmerProduct>( // Use PATCH for partial updates
+      const response = await authAxios.patch<FarmerProduct>(
         `/products/${productId}/update/`,
         dataToSend
       );
-      console.log("Updated:", response.data);
       onOpenChange(false);
-      enqueueSnackbar("Product updated successfully", { variant: "success" });
-      
+      enqueueSnackbar('Product updated successfully', { variant: 'success' });
       onEditSuccess(response.data);
     } catch (error) {
       handleErrors(error);
@@ -224,12 +187,7 @@ const EditProductModal = ({
 
   return (
     <section>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        radius="lg"
-        scrollBehavior="inside"
-      >
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="lg" scrollBehavior="inside">
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalBody>
@@ -273,17 +231,24 @@ const EditProductModal = ({
                   className="max-w-xs mb-4"
                   label="Product category"
                   selectedKeys={[formData.category]}
-                  onChange={(e) => handleInputChange(e as ChangeEvent<HTMLSelectElement>)}
+                  onSelectionChange={(selectedKeys) => {
+                    const selected = Array.from(selectedKeys)[0] as string;
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: selected,
+                    }));
+                    setErrors((prev) => ({ ...prev, category: undefined }));
+                  }}
                   isInvalid={!!errors.category}
                   errorMessage={errors.category}
                 >
                   {animals.map((animal) => (
-                    <SelectItem value={animal.key}>{animal.label}</SelectItem>
+                    <SelectItem key={animal.key} value={animal.key}>
+                      {animal.label}
+                    </SelectItem>
                   ))}
                 </Select>
-          
 
-                {/* Image Upload Section */}
                 <div className="mb-3">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="edit-image-upload" className="font-medium text-gray-500">
@@ -297,7 +262,6 @@ const EditProductModal = ({
                       accept="image/*"
                       onChange={handleImageChange}
                     />
-                    {/* Display preview of new image or existing image */}
                     {formData.image instanceof File ? (
                       <img
                         src={URL.createObjectURL(formData.image)}
@@ -311,24 +275,23 @@ const EditProductModal = ({
                         className="mt-2 w-32 h-32 object-cover rounded-md border"
                       />
                     ) : (
-                      <p className="text-gray-500 text-sm">No image selected. Current image will be cleared if saved.</p>
-                    )}
-                    {!!errors.image && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.image}
+                      <p className="text-gray-500 text-sm">
+                        No image selected. Current image will be cleared if saved.
                       </p>
                     )}
-                    {/* Option to clear current image if one exists */}
+                    {!!errors.image && (
+                      <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                    )}
                     {typeof formData.image === 'string' && formData.image && (
-                        <Button
-                            onClick={() => setFormData(prev => ({ ...prev, image: null }))}
-                            size="sm"
-                            color="danger"
-                            variant="light"
-                            className="mt-2"
-                        >
-                            Clear Current Image
-                        </Button>
+                      <Button
+                        onClick={() => setFormData((prev) => ({ ...prev, image: null }))}
+                        size="sm"
+                        color="danger"
+                        variant="light"
+                        className="mt-2"
+                      >
+                        Clear Current Image
+                      </Button>
                     )}
                   </div>
                 </div>

@@ -196,11 +196,11 @@ const AllProductsPage = () => {
         <section className="container grid md:grid-cols-3 gap-2 gap-y-4 py-3">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product, index) => (
-              <div key={index} className="bg-white rounded-lg pb-4">
+              <div key={index} className="bg-white rounded-lg pb-4 shadow-md">
                 <Image
                   src={product.image}
                   height={200}
-                  width={300}
+                  width={320}
                   radius="none"
                   className="w-full rounded-t-xl"
                 />
